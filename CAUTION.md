@@ -6,7 +6,7 @@
 
 프로젝트 폴더 안에 있는 settings.py 파일 안을 자세히 살펴보면 secret key가 있는 것을 알 수 있다.
 
-secret key는 누가 봐도 중요한 것이며 외부에 공개가 되선 안된다.
+secret key는 누가 봐도 중요한 것이며 외부에 공개가 돼선 안된다.
 
 그러므로 github에 secret key를 노출시키면 안된다.
 
@@ -17,4 +17,10 @@ secret key는 누가 봐도 중요한 것이며 외부에 공개가 되선 안�
 secret key를 분리하는 방법은 다음 사이트를 참고하자.
 
 [django secret key 분리, secrets.json 생성 (tistory.com)](https://integer-ji.tistory.com/180)
+
+
+
+gitignore 생성 및 관리하는 방법은 다음 사이트를 참고하자.
+
+[django .gitignore 설정 (tistory.com)](https://integer-ji.tistory.com/179)
 
