@@ -1,0 +1,5 @@
+django
+msoffcrypto-tool
+pathlib
+pandas
+openpyxl
