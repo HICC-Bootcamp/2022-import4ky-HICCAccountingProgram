@@ -38,7 +38,7 @@ def unlock(file_name, passwd, output_folder):
 def read_table(): # 필요한 테이블 가져오는 함수
     url = pathlib.Path(r'.\xlsx\xlsx2')
     excel_files = list(url.glob('*.xlsx'))
-    df=pd.read_excel(excel_files[0], header=10, usecols=[1, 2, 3, 4, 6, 7], engine='openpyxl')
+    df=pd.read_excel(excel_files[0], header=10, usecols=[1, 3, 4, 6, 7], engine='openpyxl')
     print(df)
     return df
 
