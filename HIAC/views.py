@@ -56,7 +56,7 @@ def readExel():
     global leftTable
     leftTable = read_table()
 
-#unlock_main('981227')
+unlock_main('981227')
 
 #row_list=[1, 2, 3, 4]
 #col_list=['거래일시']
@@ -66,5 +66,5 @@ def readExel():
 #print(extract_cols(table, col_list))
 #print(extract_cols(table, '내용'))
 #len(extract_cols(table, '내용'))
-readExel()
-print(leftTable)
+#readExel()
+#print(leftTable)
