@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.files.storage import FileSystemStorage
 
 import msoffcrypto
 import pathlib
@@ -8,8 +9,16 @@ import pandas as pd
 leftTable=list()
 rightTable=list()
 
+
 def intro(request):
-    return render(request, 'HIAC/intro.html', {})
+    context = {}
+    if request.method == 'POST':
+        uploaded_file = request.FILES['excel']
+        fs = FileSystemStorage()
+        name = fs.save(uploaded_file.name, uploaded_file)
+        context['url'] = fs.url(name)
+
+    return render(request, 'HIAC/intro.html', context)
 
 
 pd.set_option('display.max_columns', None)
