@@ -4,10 +4,11 @@ from django.core.files.storage import FileSystemStorage
 import msoffcrypto
 import pathlib
 import pandas as pd
+import numpy as np
 
 # Create your views here.
-leftTable=list()
-rightTable=list()
+leftTable=pd.DataFrame({'거래일시':[],'거래금액':[], '내용':[],'메모':[]})
+rightTable=pd.DataFrame({'거래일시':[],'거래금액':[], '내용':[],'메모':[]})
 
 
 def intro(request):
@@ -48,7 +49,7 @@ def unlock(file_name, passwd, output_folder):
 def read_table(): # 필요한 테이블 가져오는 함수
     url = pathlib.Path(r'./xlsx/xlsx2')
     excel_files = list(url.glob('*.xlsx'))
-    df = pd.read_excel(excel_files[0], header=10, usecols=[1, 3, 4, 6, 7], engine='openpyxl')
+    df = pd.read_excel(excel_files[0], header=10, usecols=[1, 3, 6, 7], engine='openpyxl')
     print(df)
     return df
 
@@ -65,8 +66,21 @@ def readExel():
     global leftTable
     leftTable = read_table()
 
-unlock_main('981227')
+def moveRight(data):
+    global rightTable
+    rightTable=rightTable.append(data, ignore_index=True)
+    print(rightTable)
+    rightTable=rightTable.sort_values(by='거래일시')
+    print(rightTable)
 
+def deleteOverlap():
+    global rightTable
+    rightTable = rightTable.drop_duplicates()
+    print(rightTable)
+
+#unlock_main('981227')
+
+#회계정보페이지 test
 #row_list=[1, 2, 3, 4]
 #col_list=['거래일시']
 #table = read_table()
@@ -75,5 +89,9 @@ unlock_main('981227')
 #print(extract_cols(table, col_list))
 #print(extract_cols(table, '내용'))
 #len(extract_cols(table, '내용'))
-#readExel()
+readExel()
+data={'거래일시':'2022.06.30 23:33:34','거래금액':'-370,500','내용':'어른이대공원(본점)','메모' : np.nan}
+rightTable = leftTable
+moveRight(data)
+deleteOverlap()
 #print(leftTable)
