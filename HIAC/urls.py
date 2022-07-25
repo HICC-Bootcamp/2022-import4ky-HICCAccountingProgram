@@ -21,7 +21,8 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    path('', views.intro),
+    path('', views.intro, name='intro'),
+    path('account_setting/', views.account_setting, name='account_setting'),
 ]
 
 if settings.DEBUG:
