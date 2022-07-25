@@ -33,10 +33,11 @@ def intro(request):
 
 
 def unlock_main(password):
-    url = pathlib.Path(r'./xlsx')
+    url = pathlib.Path(r'./HIAC/xlsx')
+    print(pathlib.Path.cwd())
     excel_files = list(url.glob('*.xlsx'))
     for i in excel_files:
-        unlock(i, password, r'./xlsx/xlsx2')
+        unlock(i, password, r'./HIAC/xlsx/xlsx2')
 
 
 def unlock(file_name, passwd, output_folder):
