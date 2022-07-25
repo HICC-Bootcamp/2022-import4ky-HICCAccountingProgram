@@ -4,6 +4,12 @@
 
 <style>
 
+    @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
+    body {
+        font-family: 'Nanum Gothic', sans-serif;
+    }
+
     #input-file-now {
         display: flex;
         justify-content: center;
@@ -14,6 +20,14 @@
         background-image:  radial-gradient(#0d0f31 0.5px, transparent 0.5px), radial-gradient(#0d0f31 0.5px, #ffffff 0.5px);
         background-size: 20px 20px;
         background-position: 0 0,10px 10px;
+    }
+
+    #pwBtn {
+        margin: 20px;
+    }
+
+    #pageMove {
+        margin: 20px;
     }
 
 </style>
@@ -28,6 +42,9 @@
         {% csrf_token %}
         <input type="file" name="excel" id="input-file-now" class="file-upload"/>
         <button type="submit">Upload excel file</button>
+          {% if url %}
+            <span>Excel file entered successfully!</span>
+          {% endif %}
       </form>
 
   <div class="card" style="width:700px;">
@@ -43,7 +60,11 @@
                     <br>
                     <input type="password" id="pass" name="password" minlength="6" required disabled />
                     <br><br>
-                    <button type="submit" class="btn btn-secondary" id="pwBtn">확인</button>
+                    <span>
+                        <button type="submit" class="btn btn-secondary" id="pwBtn" disabled>확인</button>
+                        <button type="button" class="btn btn-secondary" id="pageMove"
+                                onclick="location.href={% url 'account_setting' %}" disabled>이동</button>
+                    </span>
                 </form>
             </div>
           </div>
@@ -52,21 +73,32 @@
   </div>
  </div>
 
-
 <script>
-    function buttonActive()
+    function passwordInputActive()
     {
+        document.getElementById("pwBtn").disabled = false;
         document.getElementById("pass").disabled = false;
     }
 
+    function passwordInputInactive()
+    {
+        document.getElementById("pwBtn").disabled = true;
+        document.getElementById("pass").disabled = true;
+    }
+
+    function pageMoveActive()
+    {
+        document.getElementById("pageMove").disabled = false;
+    }
+
     {% if url %}
-        buttonActive();
+        passwordInputActive();
     {% endif %}
 
-    function unlockExcelFile()
-    {
-        let btn = document.getElementById("pwBtn")
-    }
+    {% if leftTable %}
+        passwordInputInactive();
+        pageMoveActive();
+    {% endif %}
 
 </script>
 

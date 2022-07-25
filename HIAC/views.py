@@ -28,13 +28,19 @@ def intro(request):
         pw = request.POST.get('password')
         unlock_main(pw)
         print("password 해제 완료!")
+        readExel()
+        print(leftTable)
+        context['leftTable'] = True
 
     return render(request, 'HIAC/intro.html', context)
 
 
+def account_setting(request):
+    return render(request, 'HIAC/account_setting.html')
+
+
 def unlock_main(password):
     url = pathlib.Path(r'./HIAC/xlsx')
-    print(pathlib.Path.cwd())
     excel_files = list(url.glob('*.xlsx'))
     for i in excel_files:
         unlock(i, password, r'./HIAC/xlsx/xlsx2')
@@ -54,10 +60,9 @@ def unlock(file_name, passwd, output_folder):
 
 
 def read_table(): # 필요한 테이블 가져 오는 함수
-    url = pathlib.Path(r'./xlsx/xlsx2')
+    url = pathlib.Path(r'./HIAC/xlsx/xlsx2')
     excel_files = list(url.glob('*.xlsx'))
     df = pd.read_excel(excel_files[0], header=10, usecols=[1, 3, 6, 7], engine='openpyxl')
-    print(df)
     return df
 
 
@@ -88,8 +93,6 @@ def deleteOverlap():
     rightTable = rightTable.drop_duplicates()
     print(rightTable)
 
-
-unlock_main('981227')
 
 #회계정보페이지 test
 #row_list=[1, 2, 3, 4]
