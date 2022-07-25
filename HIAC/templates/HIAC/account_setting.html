@@ -3,7 +3,16 @@
 {% block body %}
 
     <style>
+
+        @font-face {
+        font-family: 'GangwonEdu_OTFBoldA';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+        }
+
         body {
+            font-family: 'GangwonEdu_OTFBoldA', sans-serif;
             width: 1204px;
             height: 1100px;
             margin: 0;
@@ -32,20 +41,22 @@
             height: 1000px;
             float: left;
             border: 1px solid black;
+            overflow-x: scroll;
             overflow-y: scroll;
         }
 
         .rightTable {
             width: 600px;
-            height: 800px;
+            height: 900px;
             float: right;
             border: 1px solid black;
+            overflow-x: scroll;
             overflow-y: scroll;
         }
 
         .total {
             width: 600px;
-            height: 200px;
+            height: 100px;
             float: right;
             border: 1px solid black;
         }
@@ -53,28 +64,64 @@
 
     <header>
         <a href="{% url 'intro' %}"> <img src="https://cdn.pixabay.com/photo/2013/07/12/12/36/letter-146002_1280.png"
-             alt="HIAC" id="logo"></a>
+                                          alt="HIAC" id="logo"></a>
     </header>
 
     <article>
         <div class="toolbar">
 
         </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-6">
-                    <div class="leftTable">
+        <div class="mainWindow">
+            <div class="leftTable">
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Transaction Date</th>
+                            <th scope="col">Transaction Amount</th>
+                            <th scope="col">Transaction Detail</th>
+                            <th scope="col">Memo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in left_datalist %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ item.0| safe }}</td>
+                            <td>{{ item.1| safe }}</td>
+                            <td>{{ item.2| safe }}</td>
+                            <td>{{ item.3| safe }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="rightTable">
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Transaction Date</th>
+                            <th scope="col">Transaction Amount</th>
+                            <th scope="col">Transaction Detail</th>
+                            <th scope="col">Memo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       {% for item in right_datalist %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ item.0| safe }}</td>
+                            <td>{{ item.1| safe }}</td>
+                            <td>{{ item.2| safe }}</td>
+                            <td>{{ item.3| safe }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="total">
 
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="rightTable">
-
-                    </div>
-                    <div class="total">
-
-                    </div>
-                </div>
             </div>
         </div>
     </article>

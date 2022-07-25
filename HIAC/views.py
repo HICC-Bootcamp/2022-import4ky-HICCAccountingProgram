@@ -36,7 +36,17 @@ def intro(request):
 
 
 def account_setting(request):
-    return render(request, 'HIAC/account_setting.html')
+    left_data = leftTable
+    right_data = rightTable
+
+    left_datalist = left_data.values.tolist()
+    right_datalist = right_data.values.tolist()
+
+    context = {
+        'left_datalist': left_datalist,
+        'right_datalist': right_datalist
+    }
+    return render(request, 'HIAC/account_setting.html', context)
 
 
 def unlock_main(password):
@@ -94,16 +104,17 @@ def deleteOverlap():
     print(rightTable)
 
 
+#unlock_main('981227')
+
 #회계정보페이지 test
-#row_list=[1, 2, 3, 4]
-#col_list=['거래일시']
-#table = read_table()
-#table=read_table()
+row_list = [1, 2, 3, 4]
+col_list = ['거래일시']
+table = read_table()
 #print(extract_rows(table, row_list))
 #print(extract_cols(table, col_list))
 #print(extract_cols(table, '내용'))
-#len(extract_cols(table, '내용'))
-#readExel()
+len(extract_cols(table, '내용'))
+readExel()
 #data={'거래일시':'2022.06.30 23:33:34','거래금액':'-370,500','내용':'어른이대공원(본점)','메모' : np.nan}
 #rightTable = leftTable
 #moveRight(data)
