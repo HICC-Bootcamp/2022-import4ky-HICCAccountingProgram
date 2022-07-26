@@ -4,6 +4,14 @@
 
     <style>
 
+        .material-symbols-outlined {
+             font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 48
+        }
+
         @font-face {
         font-family: 'GangwonEdu_OTFBoldA';
         src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
@@ -27,12 +35,58 @@
         }
 
         .toolbar {
-            margin-top: 30px;
+            margin-top: 10px;
             width: 1204px;
-            height: 100px;
+            height: 70px;
             border: 1px solid black;
             background-color: #ccc;
         }
+
+        .toolbar .icon_group {
+            position: relative;
+            width: 400px;
+            height: 48px;
+            top: 11px;
+            margin-left: 10px;
+
+        }
+
+        .toolbar .icon_group #find {
+            font-size: 48px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .toolbar .icon_group #undo {
+            font-size: 48px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .toolbar .icon_group #redo {
+            font-size: 48px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .toolbar .icon_group #delete {
+            font-size: 48px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .toolbar .icon_group #east {
+            font-size: 48px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .toolbar .icon_group #question {
+            font-size: 48px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
 
         .leftTable {
             margin: 0;
@@ -69,7 +123,14 @@
 
     <article>
         <div class="toolbar">
-
+            <div class="icon_group">
+              <span class="material-symbols-outlined" id="find">find_in_page</span>
+              <span class="material-symbols-outlined" id="undo">undo</span>
+              <span class="material-symbols-outlined" id="redo">redo</span>
+              <span class="material-symbols-outlined" id="delete">delete</span>
+              <span class="material-symbols-outlined" id="east">east</span>
+              <span class="material-symbols-outlined" id="question" onclick="location.href='https://github.com/HICC-Bootcamp/2022-import4ky-HICCAccountingProgram'">question_mark</span>
+            </div>
         </div>
         <div class="mainWindow">
             <div class="leftTable">
