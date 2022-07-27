@@ -2,41 +2,6 @@
 
 {% block body %}
 
-<style>
-
-    @font-face {
-    font-family: 'GangwonEdu_OTFBoldA';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    }
-
-    body {
-        font-family: 'GangwonEdu_OTFBoldA', sans-serif;
-    }
-
-    #input-file-now {
-        display: flex;
-        justify-content: center;
-        width: 700px;
-        height: 200px;
-        background-color: #ffffff;
-        opacity: 1;
-        background-image:  radial-gradient(#0d0f31 0.5px, transparent 0.5px), radial-gradient(#0d0f31 0.5px, #ffffff 0.5px);
-        background-size: 20px 20px;
-        background-position: 0 0,10px 10px;
-    }
-
-    #pwBtn {
-        margin: 20px;
-    }
-
-    #pageMove {
-        margin: 20px;
-    }
-
-</style>
-
 <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
       <h1 class="display-4 fw-normal">회계 자동화 프로그램 <a href="https://github.com/HICC-Bootcamp/2022-import4ky-HICCAccountingProgram" style="font-size: 2em"> HIAC</a> 입니다.</h1>
 </div>
@@ -56,7 +21,7 @@
    <div class="card-body">
        <div class="row">
             <div class="col-lg-12 col-sm-12 text-lg-start text-center" style="margin-bottom:30px">
-                <h4 class="card-title">excel 파일을 드래그 앤 드랍하세요.</h4>
+                <h4 class="card-title">excel 파일을 드래그 앤 드랍 하세요.</h4>
             </div>
             <div class="col-lg-12 col-sm-12 text-lg-start text-center" style="margin-bottom:30px">
                 <form method="post">
@@ -78,33 +43,17 @@
   </div>
  </div>
 
+<!-- JS 연결 !-->
 <script>
-    function passwordInputActive()
-    {
-        document.getElementById("pwBtn").disabled = false;
-        document.getElementById("pass").disabled = false;
-    }
-
-    function passwordInputInactive()
-    {
-        document.getElementById("pwBtn").disabled = true;
-        document.getElementById("pass").disabled = true;
-    }
-
-    function pageMoveActive()
-    {
-        document.getElementById("pageMove").disabled = false;
-    }
-
-    {% if url %}
-        passwordInputActive();
-    {% endif %}
-
-    {% if leftTable %}
-        passwordInputInactive();
-        pageMoveActive();
-    {% endif %}
-
+    let url = "{{ url| safe }}";
+    let left_table = "{{ leftTable| safe }}";
 </script>
+
+<!-- 폰트 적용 !-->
+<style>
+    body {
+        font-family: 'GangwonEdu_OTFBoldA', sans-serif;
+    }
+</style>
 
 {% endblock %}

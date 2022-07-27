@@ -1,0 +1,87 @@
+#logo {
+    width: 50px;
+    height: 50px;
+    margin: 20px 20px 20px 20px;
+    border: 3px solid #ccc;
+}
+
+.toolbar {
+    margin-top: 10px;
+    width: 1204px;
+    height: 70px;
+    border: 1px solid black;
+    background-color: #ccc;
+}
+
+.toolbar .icon_group {
+    position: relative;
+    width: 400px;
+    height: 48px;
+    top: 11px;
+    margin-left: 10px;
+}
+
+.toolbar .icon_group #find {
+    font-size: 48px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.toolbar .icon_group #undo {
+    font-size: 48px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.toolbar .icon_group #redo {
+    font-size: 48px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.toolbar .icon_group #delete {
+    font-size: 48px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.toolbar .icon_group #east {
+    font-size: 48px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.toolbar .icon_group #question {
+    font-size: 48px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+
+.leftTable {
+    margin: 0;
+    padding: 0;
+    width: 600px;
+    height: 1000px;
+    float: left;
+    border: 1px solid black;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+
+.rightTable {
+    width: 600px;
+    height: 900px;
+    float: right;
+    border: 1px solid black;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+
+.total {
+    width: 600px;
+    height: 100px;
+    float: right;
+    border: 1px solid black;
+}
+
