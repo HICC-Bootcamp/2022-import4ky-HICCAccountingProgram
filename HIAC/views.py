@@ -49,6 +49,8 @@ def account_setting(request):
         left_checklist = request.POST.getlist('left_checkbox[]')
         # checklist 받아온 것을 정수로 변환 하여 1씩 뺀 list => 선택된 데이터 의 행을 가져 와서 rightTable 에 넘긴다.
         moveRight(extract_rows(left_data, list(map(lambda x: x-1, list(map(int, left_checklist))))))
+        deleteOverlap()
+
         right_data = rightTable
         right_datalist = right_data.values.tolist()
         context['right_datalist'] = right_datalist
