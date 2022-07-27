@@ -5,6 +5,7 @@ import msoffcrypto
 import pathlib
 import pandas as pd
 import numpy as np
+from functools import reduce
 
 # Create your views here.
 leftTable = pd.DataFrame({'거래일시': [], '거래금액': [], '내용': [], '메모': []})
@@ -37,16 +38,74 @@ def intro(request):
 
 def account_setting(request):
     left_data = leftTable
-    right_data = rightTable
 
     left_datalist = left_data.values.tolist()
-    right_datalist = right_data.values.tolist()
 
     context = {
         'left_datalist': left_datalist,
-        'right_datalist': right_datalist
     }
+
+    if request.method == "POST" and 'right_move' in request.POST:
+        checklist = request.POST.getlist('left_checkbox[]')
+        # checklist 받아온 것을 정수로 변환 한다.
+        num_checklist = map(int, checklist)
+        right_move_index = map(lambda x: x-1, num_checklist)
+        # checklist 선택된 행만 추출
+        right_move_data = extract_rows(left_data, right_move_index)
+        moveRight(right_move_data)
+        right_data = rightTable
+        right_datalist = right_data.values.tolist()
+        context['right_datalist'] = right_datalist
+
+        # statistics 계산
+        total = total_statistics(right_datalist)
+        context['total_number'] = total[0]
+        context['total_deposit'] = total[1]
+        context['total_expenditure'] = total[2]
+
     return render(request, 'HIAC/account_setting.html', context)
+
+
+def total_statistics(right_data):
+    balance = np.array(right_data).T[1]
+    list_ = balance.tolist()
+    balance_ = third_column_in_row(list_)
+    balance_list = list(map(int, balance_))
+
+    total_number = len(right_data)
+    total_deposit = sum_positive(balance_list)
+    total_expenditure = sum_negative(balance_list)
+
+    context = [total_number, total_deposit, total_expenditure]
+
+    return context
+
+
+def third_column_in_row(data):
+    valid_list = list()
+    for index in range(0, len(data)):
+        c = data[index].replace(',', '')
+        valid_list.append(c)
+
+    return valid_list
+
+
+def sum_positive(balance_list):
+    sum_ = 0
+    for i in balance_list:
+        if i >= 0:
+            sum_ += i
+
+    return sum_
+
+
+def sum_negative(balance_list):
+    sum_ = 0
+    for i in balance_list:
+        if i < 0:
+            sum_ += i
+
+    return sum_
 
 
 def unlock_main(password):
@@ -92,9 +151,9 @@ def readExel():
 
 def moveRight(data):
     global rightTable
-    rightTable=rightTable.append(data, ignore_index=True)
+    rightTable = rightTable.append(data, ignore_index=True)
     print(rightTable)
-    rightTable=rightTable.sort_values(by='거래일시')
+    rightTable = rightTable.sort_values(by='거래일시')
     print(rightTable)
 
 
