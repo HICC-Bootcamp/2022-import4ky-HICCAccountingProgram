@@ -46,22 +46,28 @@ def account_setting(request):
     }
 
     if request.method == "POST" and 'right_move' in request.POST:
-        checklist = request.POST.getlist('left_checkbox[]')
-        # checklist 받아온 것을 정수로 변환 한다.
-        num_checklist = list(map(int, checklist))
-        right_move_index = list(map(lambda x: x-1, num_checklist))
-        # checklist 선택된 행만 추출
-        right_move_data = extract_rows(left_data, right_move_index)
-        moveRight(right_move_data)
+        left_checklist = request.POST.getlist('left_checkbox[]')
+        # checklist 받아온 것을 정수로 변환 하여 1씩 뺀 list => 선택된 데이터 의 행을 가져 와서 rightTable 에 넘긴다.
+        moveRight(extract_rows(left_data, list(map(lambda x: x-1, list(map(int, left_checklist))))))
         right_data = rightTable
         right_datalist = right_data.values.tolist()
         context['right_datalist'] = right_datalist
 
         # statistics 계산
         total = total_statistics(right_datalist)
-        context['total_number'] = total[0]
-        context['total_deposit'] = total[1]
-        context['total_expenditure'] = total[2]
+        context['total_statistics'] = total
+
+    if request.method == "POST" and 'delete_data' in request.POST:
+        right_checklist = request.POST.getlist('right_checkbox[]')
+        deleteRow(list(map(lambda x: x - 1, list(map(int, right_checklist)))))
+        print(rightTable)
+
+        new_right_data = rightTable
+        new_right_datalist = new_right_data.values.tolist()
+        context.update({'right_datalist': new_right_datalist})
+
+        new_total = total_statistics(new_right_datalist)
+        context.update({'total_statistics': new_total})
 
     return render(request, 'HIAC/account_setting.html', context)
 
@@ -73,8 +79,9 @@ def total_statistics(right_data):
     total_number = len(right_data)
     total_deposit = sum_positive(balance_list)
     total_expenditure = sum_negative(balance_list)
+    total_difference = total_deposit - total_expenditure
 
-    context = [total_number, total_deposit, total_expenditure]
+    context = [total_number, total_deposit, total_expenditure, total_difference]
 
     return context
 
@@ -144,7 +151,7 @@ def extract_cols(table, col_list): # 원하는 행(새로줄)의 정보를 가�
     return table[col_list]
 
 
-#회계 정보 페이지
+# 회계 정보 페이지
 def readExel():
     global leftTable
     leftTable = read_table()
@@ -162,6 +169,12 @@ def deleteOverlap():
     global rightTable
     rightTable = rightTable.drop_duplicates()
     print(rightTable)
+
+
+# 행 삭제 함수
+def deleteRow(row_index):
+    global rightTable
+    rightTable = rightTable.drop(row_index)
 
 
 #unlock_main('981227')
