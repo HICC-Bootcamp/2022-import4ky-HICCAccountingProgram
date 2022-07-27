@@ -2,46 +2,49 @@
 
 {% block body %}
 
-<div class="pricing-header p-3 pb-md-4 mx-auto text-center">
-      <h1 class="display-4 fw-normal">회계 자동화 프로그램 <a href="https://github.com/HICC-Bootcamp/2022-import4ky-HICCAccountingProgram" style="font-size: 2em"> HIAC</a> 입니다.</h1>
-</div>
+    <header>
+        <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+            <h1 class="display-4 fw-normal">회계 자동화 프로그램 <a href="https://github.com/HICC-Bootcamp/2022-import4ky-HICCAccountingProgram" style="font-size: 2em"> HIAC</a> 입니다.</h1>
+        </div>
+    </header>
 
- <div class="container d-flex h-100">
-  <div class="row justify-content-center align-self-center">
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="excel" id="input-file-now" class="file-upload"/>
-        <button type="submit">Upload excel file</button>
-          {% if url %}
-            <span>Excel file entered successfully!</span>
-          {% endif %}
-      </form>
-
-  <div class="card" style="width:700px;">
-   <div class="card-body">
-       <div class="row">
-            <div class="col-lg-12 col-sm-12 text-lg-start text-center" style="margin-bottom:30px">
-                <h4 class="card-title">excel 파일을 드래그 앤 드랍 하세요.</h4>
-            </div>
-            <div class="col-lg-12 col-sm-12 text-lg-start text-center" style="margin-bottom:30px">
-                <form method="post">
-                    {% csrf_token %}
-                    <label for="pass">Password (6 digits minimum)</label>
-                    <br>
-                    <input type="password" id="pass" name="password" minlength="6" required disabled />
-                    <br><br>
-                    <span>
-                        <button type="submit" class="btn btn-secondary" id="pwBtn" disabled>확인</button>
-                        <button type="button" class="btn btn-secondary" id="pageMove"
-                                onclick="location.href={% url 'account_setting' %}" disabled>이동</button>
-                    </span>
-                </form>
-            </div>
+    <article>
+        <div class="container d-flex h-100">
+          <div class="row justify-content-center align-self-center">
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="excel" id="input-file-now" class="file-upload"/>
+                <button type="submit">Upload excel file</button>
+                {% if url %}
+                    <span>Excel file entered successfully!</span>
+                {% endif %}
+              </form>
+              <div class="card" style="width:700px;">
+                <div class="card-body">
+                   <div class="row">
+                        <div class="col-lg-12 col-sm-12 text-lg-start text-center" style="margin-bottom:30px">
+                            <h4 class="card-title">excel 파일을 드래그 앤 드랍 하세요.</h4>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 text-lg-start text-center" style="margin-bottom:30px">
+                            <form method="post">
+                                {% csrf_token %}
+                                <label for="pass">Password (6 digits minimum)</label>
+                                <br>
+                                <input type="password" id="pass" name="password" minlength="6" required disabled />
+                                <br><br>
+                                <span>
+                                    <button type="submit" class="btn btn-secondary" id="pwBtn" disabled>확인</button>
+                                    <button type="button" class="btn btn-secondary" id="pageMove"
+                                            onclick="location.href={% url 'account_setting' %}" disabled>이동</button>
+                                </span>
+                            </form>
+                        </div>
+                   </div>
+                </div>
+              </div>
           </div>
-       </div>
-      </div>
-  </div>
- </div>
+         </div>
+    </article>
 
 <!-- JS 연결 !-->
 <script>
