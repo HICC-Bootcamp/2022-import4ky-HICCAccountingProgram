@@ -41,6 +41,12 @@
     cursor: pointer;
 }
 
+.toolbar .left_group #delete_btn {
+    padding: 0;
+    border: none;
+    background-color:transparent;
+}
+
 .toolbar .left_group #delete {
     font-size: 48px;
     margin-right: 10px;
