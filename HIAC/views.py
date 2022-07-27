@@ -48,8 +48,8 @@ def account_setting(request):
     if request.method == "POST" and 'right_move' in request.POST:
         checklist = request.POST.getlist('left_checkbox[]')
         # checklist 받아온 것을 정수로 변환 한다.
-        num_checklist = map(int, checklist)
-        right_move_index = map(lambda x: x-1, num_checklist)
+        num_checklist = list(map(int, checklist))
+        right_move_index = list(map(lambda x: x-1, num_checklist))
         # checklist 선택된 행만 추출
         right_move_data = extract_rows(left_data, right_move_index)
         moveRight(right_move_data)
@@ -66,11 +66,9 @@ def account_setting(request):
     return render(request, 'HIAC/account_setting.html', context)
 
 
+# 통계를 출력 하는 함수
 def total_statistics(right_data):
-    balance = np.array(right_data).T[1]
-    list_ = balance.tolist()
-    balance_ = third_column_in_row(list_)
-    balance_list = list(map(int, balance_))
+    balance_list = list(map(int, third_column_in_row(np.array(right_data).T[1].tolist())))
 
     total_number = len(right_data)
     total_deposit = sum_positive(balance_list)
@@ -81,31 +79,34 @@ def total_statistics(right_data):
     return context
 
 
+# 천의 자리 콤마 없애 주는 함수
 def third_column_in_row(data):
     valid_list = list()
+
     for index in range(0, len(data)):
-        c = data[index].replace(',', '')
-        valid_list.append(c)
+        valid_list.append(data[index].replace(',', ''))
 
     return valid_list
 
 
+# 총 입금액 계산
 def sum_positive(balance_list):
-    sum_ = 0
+    deposit = 0
     for i in balance_list:
         if i >= 0:
-            sum_ += i
+            deposit += i
 
-    return sum_
+    return deposit
 
 
+# 총 출금액 계산
 def sum_negative(balance_list):
-    sum_ = 0
+    expenditure = 0
     for i in balance_list:
         if i < 0:
-            sum_ += i
+            expenditure += i
 
-    return sum_
+    return -expenditure
 
 
 def unlock_main(password):
