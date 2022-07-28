@@ -29,10 +29,22 @@
     cursor: pointer;
 }
 
+.toolbar .left_group #undo_btn {
+    padding: 0;
+    border: none;
+    background-color:transparent;
+}
+
 .toolbar .left_group #undo {
     font-size: 48px;
     margin-right: 10px;
     cursor: pointer;
+}
+
+.toolbar .left_group #redo_btn {
+    padding: 0;
+    border: none;
+    background-color:transparent;
 }
 
 .toolbar .left_group #redo {
@@ -80,14 +92,12 @@
     margin-right: 10px;
 }
 
-
 .toolbar .right_group #download {
     font-size: 48px;
     float: right;
     margin-right: 10px;
     cursor: pointer;
 }
-
 
 .leftTable {
     margin: 0;

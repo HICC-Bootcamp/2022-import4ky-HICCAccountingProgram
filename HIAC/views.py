@@ -5,7 +5,7 @@ import msoffcrypto
 import pathlib
 import pandas as pd
 import numpy as np
-from functools import reduce
+from collections import deque
 
 # Create your views here.
 leftTable = pd.DataFrame({'거래일시': [], '거래금액': [], '내용': [], '메모': []})
@@ -13,6 +13,11 @@ rightTable = pd.DataFrame({'거래일시': [], '거래금액': [], '내용': [],
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
+
+# 왼쪽 에서 부터 데이터 가 쌓이며 10개를 넘어갈 시 가장 오래된 데이터(맨 오른쪽)는 삭제 된다.
+dataset_queue = deque()
+dataset_queue.appendleft(rightTable)
+queue_index = 0
 
 
 def intro(request):
@@ -38,13 +43,16 @@ def intro(request):
 
 def account_setting(request):
     left_data = leftTable
-
     left_datalist = left_data.values.tolist()
+    global dataset_queue, queue_index
 
     context = {
         'left_datalist': left_datalist,
+        'undo_active': False,
+        'redo_active': False,
     }
 
+    # 옮기기 버튼을 눌렀을 때
     if request.method == "POST" and 'right_move' in request.POST:
         left_checklist = request.POST.getlist('left_checkbox[]')
 
@@ -52,6 +60,7 @@ def account_setting(request):
         if left_checklist:
             moveRight(extract_rows(left_data, list(map(lambda x: x-1, list(map(int, left_checklist))))))
             deleteOverlap()
+            push_deque(rightTable)
 
         right_data = rightTable
         right_datalist = right_data.values.tolist()
@@ -64,12 +73,13 @@ def account_setting(request):
         else:
             context['total_statistics'] = [0, 0, 0, 0]
 
+    # 삭제 하기 버튼을 눌렀을 때
     if request.method == "POST" and 'delete_data' in request.POST:
         right_checklist = request.POST.getlist('right_checkbox[]')
 
         if right_checklist:
             deleteRow(list(map(lambda x: x - 1, list(map(int, right_checklist)))))
-            print(rightTable)
+            push_deque(rightTable)
 
         new_right_data = rightTable
         new_right_datalist = new_right_data.values.tolist()
@@ -80,6 +90,31 @@ def account_setting(request):
             context.update({'total_statistics': new_total})
         else:
             context.update({'total_statistics': [0, 0, 0, 0]})
+
+    # 뒤로 가기 버튼을 눌렀을 때
+    if request.method == "POST" and 'undo_data' in request.POST:
+        if undo_data():
+            print(queue_index)
+            right_datalist = dataset_queue[queue_index].values.tolist()
+            context.update({'right_datalist': right_datalist})
+
+            if right_datalist:
+                total = total_statistics(right_datalist)
+                context.update({'total_statistics': total})
+            else:
+                context.update({'total_statistics': [0, 0, 0, 0]})
+
+    # 앞으로 가기 버튼을 눌렀을 때
+    if request.method == "POST" and 'redo_data' in request.POST:
+        if redo_data():
+            right_datalist = dataset_queue[queue_index].values.tolist()
+            context.update({'right_datalist': right_datalist})
+
+            if right_datalist:
+                total = total_statistics(right_datalist)
+                context.update({'total_statistics': total})
+            else:
+                context.update({'total_statistics': [0, 0, 0, 0]})
 
     return render(request, 'HIAC/account_setting.html', context)
 
@@ -196,6 +231,45 @@ def sort_and_reindex():
     rightTable = rightTable.sort_values(by='거래일시')
     row_count = len(rightTable.index)
     rightTable.index = list(range(0, row_count))
+
+
+def push_deque(right_table):
+    global dataset_queue, queue_index
+    for i in range(0, queue_index):
+        dataset_queue.popleft()
+
+    if len(dataset_queue) <= 10:
+        dataset_queue.appendleft(right_table)
+    else:
+        dataset_queue.pop()
+        dataset_queue.appendleft(right_table)
+
+    queue_index = 0
+
+
+def undo_data():
+    global queue_index
+    if dataset_queue:
+        if len(dataset_queue) == queue_index + 1:
+            pass
+        else:
+            queue_index += 1
+        return True
+    else:
+        return False
+
+
+def redo_data():
+    global queue_index
+    if dataset_queue:
+        if queue_index == 0:
+            pass
+        else:
+            queue_index -= 1
+
+        return True
+    else:
+        return False
 
 
 #unlock_main('981227')

@@ -10,30 +10,20 @@
     <article>
         <div class="toolbar">
             <div class="left_group">
-              <a title="검색 하기">
-                <span class="material-symbols-outlined" id="find">find_in_page</span>
-              </a>
-              <a title="뒤로 가기">
-                <button type="submit" form="right_table_form" name="delete_data" id="delete_btn">
-                 <span class="material-symbols-outlined" id="undo">undo</span>
+                <span class="material-symbols-outlined" title="검색 하기" id="find">find_in_page</span>
+                <button type="submit" form="undo_form" name="undo_data" id="undo_btn">
+                    <span class="material-symbols-outlined" title="뒤로 가기" id="undo">undo</span>
                 </button>
-              </a>
-              <a title="앞으로 가기">
-                <span class="material-symbols-outlined" id="redo">redo</span>
-              </a>
-              <a title="삭제 하기">
-                <button type="submit" form="right_table_form" name="delete_data" id="delete_btn">
-                    <span class="material-symbols-outlined" id="delete">delete</span>
+                <button type="submit" form="redo_form" name="redo_data" id="redo_btn">
+                    <span class="material-symbols-outlined" title="앞으로 가기" id="redo">redo</span>
                 </button>
-              </a>
-              <a title="옮기기">
+                <button type="submit" form="right_table_form" name="delete_data" id="delete_btn">
+                    <span class="material-symbols-outlined" title="삭제 하기" id="delete">delete</span>
+                </button>
                 <button type="submit" form="left_table_form" name="right_move" id="right_move_btn">
-                     <span class="material-symbols-outlined" id="east">east</span>
+                    <span class="material-symbols-outlined" title="옮기기" id="east">east</span>
                 </button>
-              </a>
-              <a title="설명">
-                <span class="material-symbols-outlined" id="question" onclick="location.href='https://github.com/HICC-Bootcamp/2022-import4ky-HICCAccountingProgram'">question_mark</span>
-              </a>
+                <span class="material-symbols-outlined"  title="설명" id="question" onclick="location.href='https://github.com/HICC-Bootcamp/2022-import4ky-HICCAccountingProgram'">question_mark</span>
             </div>
             <div class="right_group">
                 <span class="material-symbols-outlined" id="download">file_download</span>
@@ -132,6 +122,14 @@
             </div>
         </div>
     </article>
+    <footer>
+        <form method="post" id="undo_form">
+            {% csrf_token %}
+        </form>
+        <form method="post" id="redo_form">
+            {% csrf_token %}
+        </form>
+    </footer>
 
     <!-- Google material icon, font 적용 !-->
     <style>
@@ -151,5 +149,4 @@
             padding: 0;
         }
     </style>
-
 {% endblock %}
