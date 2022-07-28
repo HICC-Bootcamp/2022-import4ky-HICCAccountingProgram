@@ -58,8 +58,11 @@ def account_setting(request):
         context['right_datalist'] = right_datalist
 
         # statistics 계산
-        total = total_statistics(right_datalist)
-        context['total_statistics'] = total
+        if right_datalist:
+            total = total_statistics(right_datalist)
+            context['total_statistics'] = total
+        else:
+            context['total_statistics'] = [0, 0, 0, 0]
 
     if request.method == "POST" and 'delete_data' in request.POST:
         right_checklist = request.POST.getlist('right_checkbox[]')
@@ -72,8 +75,11 @@ def account_setting(request):
         new_right_datalist = new_right_data.values.tolist()
         context.update({'right_datalist': new_right_datalist})
 
-        new_total = total_statistics(new_right_datalist)
-        context.update({'total_statistics': new_total})
+        if new_right_datalist:
+            new_total = total_statistics(new_right_datalist)
+            context.update({'total_statistics': new_total})
+        else:
+            context.update({'total_statistics': [0, 0, 0, 0]})
 
     return render(request, 'HIAC/account_setting.html', context)
 
