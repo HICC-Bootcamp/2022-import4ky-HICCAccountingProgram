@@ -44,7 +44,7 @@ def intro(request):
 def account_setting(request):
     left_data = leftTable
     left_datalist = left_data.values.tolist()
-    global dataset_queue, queue_index
+    global dataset_queue, queue_index, rightTable
 
     context = {
         'left_datalist': left_datalist,
@@ -104,6 +104,8 @@ def account_setting(request):
             else:
                 context.update({'total_statistics': [0, 0, 0, 0]})
 
+        rightTable = dataset_queue[queue_index]
+
     # 앞으로 가기 버튼을 눌렀을 때
     if request.method == "POST" and 'redo_data' in request.POST:
         if redo_data():
@@ -115,6 +117,8 @@ def account_setting(request):
                 context.update({'total_statistics': total})
             else:
                 context.update({'total_statistics': [0, 0, 0, 0]})
+
+        rightTable = dataset_queue[queue_index]
 
     return render(request, 'HIAC/account_setting.html', context)
 
