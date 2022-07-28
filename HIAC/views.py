@@ -173,20 +173,29 @@ def moveRight(data):
     global rightTable
     rightTable = rightTable.append(data, ignore_index=True)
     print(rightTable)
-    rightTable = rightTable.sort_values(by='거래일시')
+    sort_and_reindex()
     print(rightTable)
 
 
 def deleteOverlap():
     global rightTable
     rightTable = rightTable.drop_duplicates()
+    sort_and_reindex()
     print(rightTable)
 
 
 # 행 삭제 함수
 def deleteRow(row_index):
     global rightTable
-    rightTable = rightTable.drop(row_index)
+    rightTable = rightTable.drop(row_index, axis=0)
+    sort_and_reindex()
+
+
+def sort_and_reindex():
+    global rightTable
+    rightTable = rightTable.sort_values(by='거래일시')
+    row_count = len(rightTable.index)
+    rightTable.index = list(range(0, row_count))
 
 
 #unlock_main('981227')
