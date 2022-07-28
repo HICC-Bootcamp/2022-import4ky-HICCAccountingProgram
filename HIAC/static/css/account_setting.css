@@ -92,11 +92,16 @@
     margin-right: 10px;
 }
 
-.toolbar .right_group #download {
+.toolbar .right_group #download_excel {
     font-size: 48px;
     float: right;
     margin-right: 10px;
     cursor: pointer;
+}
+
+.mainWindow {
+    width: 1204px;
+    height: 1000px;
 }
 
 .leftTable {

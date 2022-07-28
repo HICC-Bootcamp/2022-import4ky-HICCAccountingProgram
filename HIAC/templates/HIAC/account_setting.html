@@ -26,7 +26,7 @@
                 <span class="material-symbols-outlined"  title="설명" id="question" onclick="location.href='https://github.com/HICC-Bootcamp/2022-import4ky-HICCAccountingProgram'">question_mark</span>
             </div>
             <div class="right_group">
-                <span class="material-symbols-outlined" id="download">file_download</span>
+                <span class="material-symbols-outlined" title="다운로드 하기" id="download_excel">file_download</span>
             </div>
         </div>
         <div class="mainWindow">
@@ -130,6 +130,99 @@
             {% csrf_token %}
         </form>
     </footer>
+
+    <!--검색 하기 modal 창 !-->
+    <div id="find_modal_feed" class="find_modal_overlay">
+        <div class="find_modal_window">
+            <div class="modal_title">
+                <div class="modal_title_side"></div>
+                <div> 검색 하기 </div>
+                <div class="modal_title_side">
+                    <span id="close_modal"  class="material-symbols-outlined">close</span>
+                </div>
+            </div>
+            <div class="find_requirement">
+                <div class="find_date">
+                    <input type="checkbox" id="date_feed"/>
+                    <label for="date_feed" id="date_label">기간</label>
+                    <label for="start_day" id="start_day_label">시작일</label>
+                    <input type="date" id="start_day">
+                    <label for="end_day" id="end_day_label">종료일</label>
+                    <input type="date" id="end_day">
+                </div>
+                <div class="find_detail">
+                    <input type="checkbox" id="detail_feed"/>
+                    <label for="detail_feed" id="detail_label">내용</label>
+                    <input type="text" id="detail_input" placeholder="내용을 입력해 주세요">
+                </div>
+                <div class="find_balance">
+                    <input type="checkbox" id="balance_feed"/>
+                    <label for="balance_feed" id="balance_label">금액</label>
+                    <input type="text" id="balance_input" placeholder="금액을 입력해 주세요">
+                </div>
+                <div class="find_memo">
+                    <input type="checkbox" id="memo_feed"/>
+                    <label for="memo_feed" id="memo_label">메모</label>
+                    <input type="text" id="memo_input" placeholder="메모를 입력해 주세요">
+                </div>
+            </div>
+            <div class="find_show_result">
+                <div class="show_result_side"></div>
+                <div class="show_result_table">
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">
+                                    <input type="checkbox" id="modal_all_check" onchange="checkAll(this)"/>
+                                </th>
+                                <th scope="col">거래 일자</th>
+                                <th scope="col">거래 금액</th>
+                                <th scope="col">거래 내용</th>
+                                <th scope="col">메모</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           {% for right_item in right_datalist %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="right_checkbox[]" type="checkbox" value="{{ forloop.counter }}">
+                                    </div>
+                                </td>
+                                <td>{{ right_item.0| safe }}</td>
+                                <td>{{ right_item.1| safe }}</td>
+                                <td>{{ right_item.2| safe }}</td>
+                                <td>{{ right_item.3| safe }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="show_result_side"></div>
+            </div>
+            <div class="button_group">
+                <div class="button_group_side"></div>
+                <button type="submit" class="btn btn-secondary" id="modal_search">검색</button>
+                <button type="submit" class="btn btn-secondary" id="modal_ok">확인</button>
+                <div class="button_group_side"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="download_modal_feed" class="download_modal_overlay">
+        <div class="download_modal_window">
+            <div class="download_modal_title">
+                <div class="download_modal_title_side"></div>
+                <div> 다운로드 하기 </div>
+                <div class="download_modal_title_side">
+                    <span id="close_download_modal" class="material-symbols-outlined">close</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Google material icon, font 적용 !-->
     <style>
