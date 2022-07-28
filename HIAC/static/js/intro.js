@@ -13,11 +13,21 @@ function pageMoveActive() {
     document.getElementById("pageMove").disabled = false;
 }
 
-if (url) {
-    passwordInputActive();
+function PasswordError() {
+    alert("패스워드가 일치하지 않습니다.");
 }
 
-if (left_table) {
+if(password_error === "True") {
+    PasswordError();
+    passwordInputActive();
+}
+else {
+    if (url) {
+        passwordInputActive();
+    }
+
+    if (left_table) {
      passwordInputInactive();
      pageMoveActive();
+    }
 }

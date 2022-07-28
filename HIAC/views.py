@@ -28,15 +28,19 @@ def intro(request):
         name = fs.save(uploaded_file.name, uploaded_file)
         context = {
             'url': fs.url(name),
+            'password_error': False
         }
 
     if request.method == "POST" and 'password' in request.POST:
         pw = request.POST.get('password')
-        unlock_main(pw)
-        print("password 해제 완료!")
-        readExel()
-        print(leftTable)
-        context['leftTable'] = True
+        try:
+            unlock_main(pw)
+            readExel()
+            context['leftTable'] = True
+            context.update({'password_error': False})
+
+        except msoffcrypto.exceptions.InvalidKeyError:
+            context.update({'password_error': True})
 
     return render(request, 'HIAC/intro.html', context)
 
@@ -279,14 +283,14 @@ def redo_data():
 #unlock_main('981227')
 
 #회계정보페이지 test
-row_list = [1, 2, 3, 4]
-col_list = ['거래일시']
-table = read_table()
+#row_list = [1, 2, 3, 4]
+#col_list = ['거래일시']
+#table = read_table()
 #print(extract_rows(table, row_list))
 #print(extract_cols(table, col_list))
 #print(extract_cols(table, '내용'))
-len(extract_cols(table, '내용'))
-readExel()
+#len(extract_cols(table, '내용'))
+#readExel()
 #data={'거래일시':'2022.06.30 23:33:34','거래금액':'-370,500','내용':'어른이대공원(본점)','메모' : np.nan}
 #rightTable = leftTable
 #moveRight(data)
