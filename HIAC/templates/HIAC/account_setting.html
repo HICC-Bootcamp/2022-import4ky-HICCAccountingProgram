@@ -129,6 +129,12 @@
         <form method="post" id="redo_form">
             {% csrf_token %}
         </form>
+        <form method="post" id="find_modal_OK_form">
+            {% csrf_token %}
+        </form>
+        <form method="post" id="download_form">
+            {% csrf_token %}
+        </form>
     </footer>
 
     <!--search modal window !-->
@@ -142,29 +148,32 @@
                 </div>
             </div>
             <div class="find_requirement">
+             <form method="post" id="search_form">
+             {% csrf_token %}
                 <div class="find_date">
-                    <input type="checkbox" id="date_feed"/>
+                    <input type="checkbox" id="date_feed" onchange="dateInputManage()"/>
                     <label for="date_feed" id="date_label">기간</label>
                     <label for="start_day" id="start_day_label">시작일</label>
-                    <input type="date" id="start_day">
+                    <input type="date" id="start_day" disabled>
                     <label for="end_day" id="end_day_label">종료일</label>
-                    <input type="date" id="end_day">
+                    <input type="date" id="end_day" disabled>
                 </div>
                 <div class="find_detail">
-                    <input type="checkbox" id="detail_feed"/>
+                    <input type="checkbox" id="detail_feed" onchange="detailInputManage()"/>
                     <label for="detail_feed" id="detail_label">내용</label>
-                    <input type="text" id="detail_input" placeholder="내용을 입력해 주세요">
+                    <input type="text" id="detail_input" placeholder="내용을 입력해 주세요" disabled>
                 </div>
                 <div class="find_balance">
-                    <input type="checkbox" id="balance_feed"/>
+                    <input type="checkbox" id="balance_feed" onchange="balanceInputManage()"/>
                     <label for="balance_feed" id="balance_label">금액</label>
-                    <input type="text" id="balance_input" placeholder="금액을 입력해 주세요">
+                    <input type="text" id="balance_input" placeholder="금액을 입력해 주세요" disabled>
                 </div>
                 <div class="find_memo">
-                    <input type="checkbox" id="memo_feed"/>
+                    <input type="checkbox" id="memo_feed" onchange="memoInputManage()"/>
                     <label for="memo_feed" id="memo_label">메모</label>
-                    <input type="text" id="memo_input" placeholder="메모를 입력해 주세요">
+                    <input type="text" id="memo_input" placeholder="메모를 입력해 주세요" disabled>
                 </div>
+             </form>
             </div>
             <div class="find_show_result">
                 <div class="show_result_side"></div>
@@ -204,8 +213,8 @@
             </div>
             <div class="button_group">
                 <div class="button_group_side"></div>
-                <button type="submit" class="btn btn-secondary" id="modal_search">검색</button>
-                <button type="submit" class="btn btn-secondary" id="modal_ok">확인</button>
+                <button type="submit" form="search_form" class="btn btn-secondary" id="modal_search">검색</button>
+                <button type="submit" form="find_modal_OK_form" class="btn btn-secondary" id="modal_ok">확인</button>
                 <div class="button_group_side"></div>
             </div>
         </div>
@@ -228,7 +237,7 @@
                 </div>
                 <div class="download_button_window">
                     <div class="download_button_window_side"></div>
-                    <button type="submit" class="btn btn-secondary" id="download_button_feed">저장</button>
+                    <button type="submit" form="download_form" class="btn btn-secondary" id="download_button_feed">저장</button>
                     <div class="download_button_window_side"></div>
                 </div>
             </div>
