@@ -23,7 +23,7 @@
                 <button type="submit" form="left_table_form" name="right_move" id="right_move_btn">
                     <span class="material-symbols-outlined" title="옮기기" id="east">east</span>
                 </button>
-                <span class="material-symbols-outlined"  title="설명" id="question" onclick="location.href='https://github.com/HICC-Bootcamp/2022-import4ky-HICCAccountingProgram'">question_mark</span>
+                <span class="material-symbols-outlined"  title="설명" id="question">question_mark</span>
             </div>
             <div class="right_group">
                 <span class="material-symbols-outlined" title="다운로드 하기" id="download_excel">file_download</span>
@@ -131,7 +131,7 @@
         </form>
     </footer>
 
-    <!--검색 하기 modal 창 !-->
+    <!--search modal window !-->
     <div id="find_modal_feed" class="find_modal_overlay">
         <div class="find_modal_window">
             <div class="modal_title">
@@ -211,6 +211,7 @@
         </div>
     </div>
 
+    <!-- download modal window !-->
     <div id="download_modal_feed" class="download_modal_overlay">
         <div class="download_modal_window">
             <div class="download_modal_title">
@@ -220,9 +221,60 @@
                     <span id="close_download_modal" class="material-symbols-outlined">close</span>
                 </div>
             </div>
+            <div class="download_window">
+                <div class="file_name_input_window">
+                    <label for="file_name_input" id="file_name_input_label">문서명 입력</label>
+                    <input type="text" id="file_name_input" placeholder="문서명을 입력해주세요">
+                </div>
+                <div class="download_button_window">
+                    <div class="download_button_window_side"></div>
+                    <button type="submit" class="btn btn-secondary" id="download_button_feed">저장</button>
+                    <div class="download_button_window_side"></div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- question modal window !-->
+    <div id="question_modal_feed" class="question_modal_overlay">
+        <div class="question_modal_window">
+             <div class="question_modal_title">
+                <div class="question_modal_title_side"></div>
+                <div> 기능 설명 </div>
+                <div class="question_modal_title_side">
+                    <span id="close_question_modal" class="material-symbols-outlined">close</span>
+                </div>
+            </div>
+            <div class="question_window">
+                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
+                  <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                  </div>
+                  <div class="carousel-inner">
+                    <div class="carousel-item active">
+                      <img src="..." class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                      <img src="..." class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                      <img src="..." class="d-block w-100" alt="...">
+                    </div>
+                  </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Google material icon, font 적용 !-->
     <style>

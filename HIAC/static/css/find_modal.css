@@ -170,7 +170,6 @@
 
 .show_result_table {
     width: 490px;
-    overflow-x: scroll !important;
     overflow-y: scroll !important;
 }
 
