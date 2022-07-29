@@ -75,3 +75,5 @@ function memoInputManage() {
     }
 }
 
+let checkboxes = [dateCheckbox, detailCheckbox, balanceCheckbox, memoCheckbox];
+

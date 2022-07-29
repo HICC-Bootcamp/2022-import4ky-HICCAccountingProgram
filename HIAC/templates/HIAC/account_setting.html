@@ -213,7 +213,7 @@
             </div>
             <div class="button_group">
                 <div class="button_group_side"></div>
-                <button type="submit" form="search_form" class="btn btn-secondary" id="modal_search">검색</button>
+                <button type="button" form="search_form" onclick="show_result()" class="btn btn-secondary" id="modal_search">검색</button>
                 <button type="submit" form="find_modal_OK_form" class="btn btn-secondary" id="modal_ok">확인</button>
                 <div class="button_group_side"></div>
             </div>
@@ -303,4 +303,44 @@
             padding: 0;
         }
     </style>
+
+    <script>
+        function show_result() {
+            let date_start = document.getElementById('start_day').value;
+            let date_end = document.getElementById('end_day').value;
+            let detail = document.getElementById('detail_input').value;
+            let balance = document.getElementById('balance_input').value;
+            let memo = document.getElementById('memo_input').value;
+
+            let param = {
+                'date_start' : date_start,
+                'date_end': date_end,
+                'detail': detail,
+                'balance': balance,
+                'memo': memo,
+            }
+
+            console.log(date_start);
+            console.log(date_end);
+            console.log(detail);
+            console.log(balance);
+            console.log(memo);
+
+            $.ajax({
+                url: {% url 'search_data' %},
+                type: "POST",
+                headers: {
+                    'X-CSRFTOKEN' : '{{ csrf_token }}'
+                },
+                data: JSON.stringify(param),
+                success: function(data) {
+                    alert(data);
+                },
+                error: function() {
+                    alert('no');
+                }
+            });
+        }
+    </script>
+
 {% endblock %}

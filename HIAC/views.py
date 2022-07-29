@@ -1,10 +1,12 @@
 from django.shortcuts import render
+from django.http import JsonResponse
 from django.core.files.storage import FileSystemStorage
 
 import msoffcrypto
 import pathlib
 import pandas as pd
 import numpy as np
+import json
 from collections import deque
 
 # Create your views here.
@@ -125,6 +127,17 @@ def account_setting(request):
     return render(request, 'HIAC/account_setting.html', context)
 
 
+def search_data(request):
+    jsonObject = json.loads(request.body)
+    print(jsonObject.get('date_start'))
+    print(jsonObject.get('date_end'))
+    print(jsonObject.get('detail'))
+    print(jsonObject.get('balance'))
+    print(jsonObject.get('memo'))
+
+    return JsonResponse(jsonObject)
+
+
 # 통계를 출력 하는 함수
 def total_statistics(right_data):
     balance_list = list(map(int, third_column_in_row(np.array(right_data).T[1].tolist())))
@@ -196,11 +209,11 @@ def read_table(): # 필요한 테이블 가져 오는 함수
     return df
 
 
-def extract_rows(table, row_list): # 원하는 열(가로줄)의 정보를 가져 오는 함수
+def extract_rows(table, row_list): # 원하는 행(가로줄)의 정보를 가져 오는 함수
     return table.loc[row_list]
 
 
-def extract_cols(table, col_list): # 원하는 행(새로줄)의 정보를 가져 오는 함수
+def extract_cols(table, col_list): # 원하는 열(새로줄)의 정보를 가져 오는 함수
     return table[col_list]
 
 
@@ -276,6 +289,8 @@ def redo_data():
         return True
     else:
         return False
+
+
 
 
 #unlock_main('981227')
