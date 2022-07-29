@@ -24,3 +24,63 @@
     position: relative;
     padding: 10px;
 }
+
+.download_modal_title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#close_download_modal {
+    cursor: pointer;
+}
+
+.download_modal_title_side {
+    flex: 0 0 40px;
+    text-align: center;
+}
+
+.download_window {
+    width: 680px;
+    height: 400px;
+    margin-top: 50px;
+}
+
+.file_name_input_window {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 200px;
+}
+
+#file_name_input_label {
+    text-align: center;
+    width: 70px;
+    font-size: 15px;
+}
+
+#file_name_input {
+    width: 400px;
+    height: 30px;
+}
+
+.download_button_window {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 200px;
+}
+
+.download_button_window_side {
+    flex: 0 0 40px;
+    text-align: center;
+}
+
+#download_button_feed {
+    width: 60px;
+    height: 30px;
+}
