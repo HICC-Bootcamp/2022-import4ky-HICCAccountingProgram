@@ -128,14 +128,31 @@ def account_setting(request):
 
 
 def search_data(request):
-    jsonObject = json.loads(request.body)
-    print(jsonObject.get('date_start'))
-    print(jsonObject.get('date_end'))
-    print(jsonObject.get('detail'))
-    print(jsonObject.get('balance'))
-    print(jsonObject.get('memo'))
+    json_object = json.loads(request.body)
 
-    return JsonResponse(jsonObject)
+    temp_right_table = rightTable
+    solve_nan_right_table = temp_right_table.fillna('n/a')
+    # nan 처리를 해줘야 JSON parse 를 사용할 수 있다.
+
+    modal_right_datalist = solve_nan_right_table.values.tolist()
+
+    dictlist = []
+
+    for i in range(0, len(modal_right_datalist)):
+        dict_ = {
+            'transaction_time': modal_right_datalist[i][0],
+            'transaction_balance': modal_right_datalist[i][1],
+            'transaction_detail': modal_right_datalist[i][2],
+            'transaction_memo': modal_right_datalist[i][3]
+        }
+
+        # 비어 있는 값이면 공백 으로 처리
+        if modal_right_datalist[i][3] == 'n/a':
+            dict_.update({'transaction_memo': " "})
+
+        dictlist.append(dict_)
+
+    return JsonResponse({'dlist': dictlist}, json_dumps_params={'ensure_ascii': False}, content_type="application/json")
 
 
 # 통계를 출력 하는 함수

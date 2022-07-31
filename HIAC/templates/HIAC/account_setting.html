@@ -178,7 +178,7 @@
             <div class="find_show_result">
                 <div class="show_result_side"></div>
                 <div class="show_result_table">
-                    <table class="table">
+                    <table class="table" id="modal_table">
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col">#</th>
@@ -191,21 +191,8 @@
                                 <th scope="col">메모</th>
                             </tr>
                         </thead>
-                        <tbody>
-                           {% for right_item in right_datalist %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter }}</th>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input" name="right_checkbox[]" type="checkbox" value="{{ forloop.counter }}">
-                                    </div>
-                                </td>
-                                <td>{{ right_item.0| safe }}</td>
-                                <td>{{ right_item.1| safe }}</td>
-                                <td>{{ right_item.2| safe }}</td>
-                                <td>{{ right_item.3| safe }}</td>
-                            </tr>
-                            {% endfor %}
+                        <tbody id="table_body">
+
                         </tbody>
                     </table>
                 </div>
@@ -320,25 +307,35 @@
                 'memo': memo,
             }
 
-            console.log(date_start);
-            console.log(date_end);
-            console.log(detail);
-            console.log(balance);
-            console.log(memo);
-
             $.ajax({
                 url: {% url 'search_data' %},
                 type: "POST",
+                dataType: 'json',
                 headers: {
                     'X-CSRFTOKEN' : '{{ csrf_token }}'
                 },
                 data: JSON.stringify(param),
-                success: function(data) {
-                    alert(data);
+                complete: function(response) {
+                    let result = JSON.parse(response.responseText);
+                    console.log(result.dlist);
+
+                    let inner = ''
+
+                    $.each(result.dlist, function(idx, val) {
+                        let show_idx = parseInt(idx) + 1;
+                        inner += '<tr id = "no'+ idx+1 + '">';
+                        inner += '<th scope="row" id="row_num' + show_idx + '">' + show_idx + '</th>';
+                        inner += '<td><div class="form-check"> <input class="form-check-input" name="modal_checkbox[]" type="checkbox" value="' + idx + 1 + '"> </div> </td>';
+                        inner += '<td>' + val.transaction_time + '</td>';
+                        inner += '<td>' + val.transaction_balance + '</td>';
+                        inner += '<td>' + val.transaction_detail + '</td>';
+                        inner += '<td>' + val.transaction_memo + '</td>';
+                        inner += '</tr>';
+                    });
+
+                    $('#table_body').after(inner);
                 },
-                error: function() {
-                    alert('no');
-                }
+
             });
         }
     </script>
