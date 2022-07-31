@@ -292,12 +292,42 @@
     </style>
 
     <script>
+        let url_search_data = {% url 'search_data' %};
+
         function show_result() {
             let date_start = document.getElementById('start_day').value;
             let date_end = document.getElementById('end_day').value;
             let detail = document.getElementById('detail_input').value;
             let balance = document.getElementById('balance_input').value;
             let memo = document.getElementById('memo_input').value;
+
+            let date_checkbox = document.getElementById('date_feed');
+            let balance_checkbox = document.getElementById('balance_feed');
+            let detail_checkbox = document.getElementById('detail_feed');
+            let memo_checkbox = document.getElementById('memo_feed');
+
+            if (date_checkbox.checked === false) {
+                date_start = "";
+                date_end = "";
+            }
+
+            if (balance_checkbox.checked === false) {
+                balance = "";
+            }
+
+            if (detail_checkbox.checked === false) {
+                detail = "";
+            }
+
+            if (memo_checkbox.checked === false) {
+                memo = "";
+            }
+
+            console.log(date_start);
+            console.log(date_end);
+            console.log(detail);
+            console.log(balance);
+            console.log(memo);
 
             let param = {
                 'date_start' : date_start,
@@ -308,7 +338,7 @@
             }
 
             $.ajax({
-                url: {% url 'search_data' %},
+                url: url_search_data,
                 type: "POST",
                 dataType: 'json',
                 headers: {
