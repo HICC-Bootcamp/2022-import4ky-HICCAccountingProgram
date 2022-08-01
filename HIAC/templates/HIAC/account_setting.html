@@ -129,9 +129,6 @@
         <form method="post" id="redo_form">
             {% csrf_token %}
         </form>
-        <form method="post" id="find_modal_OK_form">
-            {% csrf_token %}
-        </form>
         <form method="post" id="download_form">
             {% csrf_token %}
         </form>
@@ -191,9 +188,12 @@
                                 <th scope="col">메모</th>
                             </tr>
                         </thead>
-                        <tbody id="table_body">
+                        <form method="post" id="find_modal_OK_form">
+                            {% csrf_token %}
+                            <tbody id="table_body">
 
-                        </tbody>
+                            </tbody>
+                        </form>
                     </table>
                 </div>
                 <div class="show_result_side"></div>
@@ -201,7 +201,7 @@
             <div class="button_group">
                 <div class="button_group_side"></div>
                 <button type="button" form="search_form" onclick="show_result()" class="btn btn-secondary" id="modal_search">검색</button>
-                <button type="submit" form="find_modal_OK_form" name="modal_ok_btn" class="btn btn-secondary" id="modal_ok">확인</button>
+                <button type="button" form="find_modal_OK_form" onclick="ok_button_clicked()" name="modal_ok_btn" class="btn btn-secondary" id="modal_ok">확인</button>
                 <div class="button_group_side"></div>
             </div>
         </div>
@@ -293,6 +293,7 @@
 
     <script>
         let url_search_data = {% url 'search_data' %};
+        let url_ok_button = {% url 'ok_button' %};
 
         function show_result() {
             let date_start = document.getElementById('start_day').value;
@@ -352,10 +353,9 @@
                     let inner = '';
 
                     $.each(result.dlist, function(idx, val) {
-                        let show_idx = parseInt(idx) + 1;
-                        inner += '<tr id = "no'+ show_idx + '">';
-                        inner += '<th scope="row" id="row_num' + show_idx + '">' + show_idx + '</th>';
-                        inner += '<td><div class="form-check"> <input  type="checkbox" class="alloc_checkbox" name="modal_checkbox[]" value="' + show_idx + '"> </div> </td>';
+                        inner += '<tr>';
+                        inner += '<th scope="row">' + val.search_index + '</th>';
+                        inner += '<td><div class="form-check"> <input  type="checkbox" name="modal_checkbox[]" value="' + val.search_index + '"> </div> </td>';
                         inner += '<td>' + val.transaction_time + '</td>';
                         inner += '<td>' + val.transaction_balance + '</td>';
                         inner += '<td>' + val.transaction_detail + '</td>';
@@ -385,6 +385,35 @@
                     checkbox.checked = false;
                 });
             }
+        }
+
+        function ok_button_clicked() {
+            let modal_checkboxes = document.querySelectorAll("input[name = 'modal_checkbox[]']");
+
+            let check_list = [];
+
+            modal_checkboxes.forEach(function (checkbox) {
+               console.log(checkbox.value);
+               check_list.push(checkbox.value);
+            });
+
+            let param = {
+                'check_list': check_list,
+            }
+
+             $.ajax({
+                 url: url_ok_button,
+                 type: "POST",
+                 dataType: 'json',
+                 headers: {
+                     'X-CSRFTOKEN': '{{ csrf_token }}'
+                 },
+                 data: JSON.stringify(param),
+                 complete: function() {
+                     alert("move success");
+                     document.location.reload();
+                 }
+             });
         }
 
     </script>

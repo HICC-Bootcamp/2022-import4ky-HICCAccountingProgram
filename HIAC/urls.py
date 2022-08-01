@@ -24,6 +24,7 @@ urlpatterns = [
     path('', views.intro, name='intro'),
     path('account_setting/', views.account_setting, name='account_setting'),
     path('search_data/', views.search_data, name='search_data'),
+    path('ok_button/', views.ok_button, name='ok_button'),
 ]
 
 if settings.DEBUG:
