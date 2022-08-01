@@ -21,6 +21,8 @@ dataset_queue = deque()
 dataset_queue.appendleft(rightTable)
 queue_index = 0
 
+intersection_index = list()
+
 
 def intro(request):
     context = {}
@@ -48,12 +50,16 @@ def intro(request):
 
 
 def account_setting(request):
-    left_data = leftTable
-    left_datalist = left_data.values.tolist()
     global dataset_queue, queue_index, rightTable
+
+    left_data = leftTable
+    right_data = rightTable
+    left_datalist = left_data.values.tolist()
+    right_datalist = right_data.values.tolist()
 
     context = {
         'left_datalist': left_datalist,
+        'right_datalist': right_datalist
     }
 
     # 옮기기 버튼을 눌렀을 때
@@ -130,29 +136,46 @@ def account_setting(request):
 def search_data(request):
     json_object = json.loads(request.body)
 
-    temp_right_table = rightTable
-    solve_nan_right_table = temp_right_table.fillna('n/a')
+    start = json_object.get('date_start')
+    end = json_object.get('date_end')
+    detail = json_object.get('detail')
+    balance = json_object.get('balance')
+    memo = json_object.get('memo')
+
+    start_ = first_column_in_row(start)
+    end_ = first_column_in_row(end)
+
+    print(start_)
+    print(end_)
+    print(detail)
+    print(balance)
+    print(memo)
+
+    intersection(detail, balance, start_, end_, memo)
+    search_dataframe = extract_rows(leftTable, intersection_index)
+
+    solve_nan_search_dataframe = search_dataframe.fillna('n/a')
     # nan 처리를 해줘야 JSON parse 를 사용할 수 있다.
 
-    modal_right_datalist = solve_nan_right_table.values.tolist()
+    search_dataframe_to_list = solve_nan_search_dataframe.values.tolist()
 
-    dictlist = []
+    search_list = []
 
-    for i in range(0, len(modal_right_datalist)):
-        dict_ = {
-            'transaction_time': modal_right_datalist[i][0],
-            'transaction_balance': modal_right_datalist[i][1],
-            'transaction_detail': modal_right_datalist[i][2],
-            'transaction_memo': modal_right_datalist[i][3]
+    for i in range(0, len(search_dataframe_to_list)):
+        search_dict = {
+            'transaction_time': search_dataframe_to_list[i][0],
+            'transaction_balance': search_dataframe_to_list[i][1],
+            'transaction_detail': search_dataframe_to_list[i][2],
+            'transaction_memo': search_dataframe_to_list[i][3]
         }
 
         # 비어 있는 값이면 공백 으로 처리
-        if modal_right_datalist[i][3] == 'n/a':
-            dict_.update({'transaction_memo': " "})
+        if search_dataframe_to_list[i][3] == 'n/a':
+            search_dict.update({'transaction_memo': " "})
 
-        dictlist.append(dict_)
+        search_list.append(search_dict)
 
-    return JsonResponse({'dlist': dictlist}, json_dumps_params={'ensure_ascii': False}, content_type="application/json")
+    return JsonResponse({'dlist': search_list}, json_dumps_params={'ensure_ascii': False}, content_type="application/json")
 
 
 # 통계를 출력 하는 함수
@@ -177,6 +200,12 @@ def third_column_in_row(data):
         valid_list.append(data[index].replace(',', ''))
 
     return valid_list
+
+
+def first_column_in_row(data):
+    valid_str = data.replace('-', '.')
+
+    return valid_str
 
 
 # 총 입금액 계산
@@ -226,11 +255,13 @@ def read_table(): # 필요한 테이블 가져 오는 함수
     return df
 
 
-def extract_rows(table, row_list): # 원하는 행(가로줄)의 정보를 가져 오는 함수
+# 원하는 행(가로줄)의 정보를 가져 오는 함수
+def extract_rows(table, row_list):
     return table.loc[row_list]
 
 
-def extract_cols(table, col_list): # 원하는 열(새로줄)의 정보를 가져 오는 함수
+# 원하는 열(새로줄)의 정보를 가져 오는 함수
+def extract_cols(table, col_list):
     return table[col_list]
 
 
@@ -308,13 +339,55 @@ def redo_data():
         return False
 
 
+def date_select(date_start, date_end):
+    date_list = extract_cols(leftTable, '거래일시')
+    index_date = list()
+    a = 0
+    for i in date_list:
+        if date_start <= i <= date_end:
+            index_date.append(a)
+        a += 1
+
+    print(index_date)
+    return index_date
+
+
+def money_select(money):
+    money_list = extract_cols(leftTable, '거래금액')
+    index_money = [i for i in range(len(money_list)) if money in money_list[i]]
+    print(index_money)
+    return index_money
+
+
+def name_select(name):
+    namelist = extract_cols(leftTable, '내용')
+    index_name = [i for i in range(len(namelist)) if name in namelist[i]]
+    print(index_name)
+    return index_name
+
+
+def memo_select(memo):
+    memo_list = extract_cols(leftTable, '메모')
+    index_memo = [i for i in range(len(memo_list)) if memo in memo_list[i]]
+    print(index_memo)
+    return index_memo
+
+
+def intersection(name, money, date_start, date_end, memo):
+    global intersection_index
+    date_index = date_select(date_start, date_end)
+    name_index = name_select(name)
+    money_index = money_select(money)
+    memo_index = memo_select(memo)
+    intersection_index = list(set(name_index) & set(money_index) & set(date_index) & set(memo_index))
+    print(intersection_index)
 
 
 #unlock_main('981227')
 
 #회계정보페이지 test
-row_list = [1, 2, 3, 4]
-col_list = ['거래일시']
+#row_list = [1, 2, 3, 4]
+#col_list = ['거래일시']
 table = read_table()
 #print(extract_rows(table, row_list))
 #print(extract_cols(table, col_list))

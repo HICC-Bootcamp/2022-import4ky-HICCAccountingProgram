@@ -349,13 +349,13 @@
                     let result = JSON.parse(response.responseText);
                     console.log(result.dlist);
 
-                    let inner = ''
+                    let inner = '';
 
                     $.each(result.dlist, function(idx, val) {
                         let show_idx = parseInt(idx) + 1;
-                        inner += '<tr id = "no'+ idx+1 + '">';
+                        inner += '<tr id = "no'+ show_idx + '">';
                         inner += '<th scope="row" id="row_num' + show_idx + '">' + show_idx + '</th>';
-                        inner += '<td><div class="form-check"> <input class="form-check-input" name="modal_checkbox[]" type="checkbox" value="' + idx + 1 + '"> </div> </td>';
+                        inner += '<td><div class="form-check"> <input class="form-check-input" name="modal_checkbox[]" type="checkbox" value="' + show_idx + '"> </div> </td>';
                         inner += '<td>' + val.transaction_time + '</td>';
                         inner += '<td>' + val.transaction_balance + '</td>';
                         inner += '<td>' + val.transaction_detail + '</td>';
@@ -363,6 +363,7 @@
                         inner += '</tr>';
                     });
 
+                    $('#table_body').empty();
                     $('#table_body').after(inner);
                 },
 
