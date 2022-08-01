@@ -363,10 +363,14 @@ def date_select(date_start, date_end, total_index):
 
 def money_select(money, total_index):
     money_list = extract_cols(leftTable, '거래금액')
+    new_money_list=third_column_in_row(money_list)
     if money == '':
         index_money = total_index
     else:
-        index_money = [i for i in range(len(money_list)) if money in money_list[i]]
+        new_money = money.replace(',','')
+        new_money = money.replace('.', '')
+        new_money = money.replace(' ', '')
+        index_money = [i for i in range(len(new_money_list)) if new_money in new_money_list[i]]
     print(index_money)
     return index_money
 
