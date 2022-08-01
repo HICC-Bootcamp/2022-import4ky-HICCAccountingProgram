@@ -218,7 +218,7 @@
             </div>
             <div class="download_window">
                 <div class="file_name_input_window">
-                    <form method="post" id="download_form">
+                    <form method="post" action="{% url 'download' %}" id="download_form">
                       {% csrf_token %}
                       <label for="file_name_input" id="file_name_input_label">문서명 입력</label>
                       <input type="text" name="file_name" id="file_name_input" placeholder="문서명을 입력해주세요">

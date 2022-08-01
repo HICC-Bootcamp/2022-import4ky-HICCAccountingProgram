@@ -26,6 +26,7 @@ urlpatterns = [
     path('search_data/', views.search_data, name='search_data'),
     path('ok_button/', views.ok_button, name='ok_button'),
     path('download_button/', views.download_button, name='download_button'),
+    path('donwload/', views.download, name='download')
 ]
 
 if settings.DEBUG:

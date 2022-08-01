@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from django.core.files.storage import FileSystemStorage
 
 import msoffcrypto
@@ -142,22 +142,6 @@ def account_setting(request):
 
         rightTable = dataset_queue[queue_index]
 
-    # download modal window 안의 저장 버튼을 눌렀을 때
-    if request.method == "POST" and 'file_name' in request.POST:
-        file_name = request.POST.get('file_name')
-
-        src = pathlib.Path(r'./HIAC/xlsx/xlsx3/output.xlsx')
-        xlsx_dir = pathlib.Path(r'./HIAC/xlsx/xlsx3')
-
-        if file_name != "":
-            temp = file_name + '.xlsx'
-            dst = os.path.join(xlsx_dir, temp)
-            os.rename(src, dst)
-        else:
-            temp = 'HIAC.xlsx'
-            dst = os.path.join(xlsx_dir, temp)
-            os.rename(src, dst)
-
     return render(request, 'HIAC/account_setting.html', context)
 
 
@@ -240,20 +224,6 @@ def ok_button(request):
     return render(request, 'HIAC/account_setting.html', context)
 
 
-# 통계를 출력 하는 함수
-def total_statistics(right_data):
-    balance_list = list(map(int, third_column_in_row(np.array(right_data).T[1].tolist())))
-
-    total_number = len(right_data)
-    total_deposit = sum_positive(balance_list)
-    total_expenditure = sum_negative(balance_list)
-    total_difference = total_deposit - total_expenditure
-
-    context = [total_number, total_deposit, total_expenditure, total_difference]
-
-    return context
-
-
 def download_button(request):
     global totalStatistics, rightTable
 
@@ -275,6 +245,48 @@ def download_button(request):
         statistics_dataframe.to_excel(writer, sheet_name="통계", index=False)
 
     return JsonResponse({"success_": "success"})
+
+
+# download modal window 안의 저장 버튼을 눌렀을 때 파일 저장
+def download(request):
+    file_name = request.POST.get('file_name')
+
+    src = pathlib.Path(r'./HIAC/xlsx/xlsx3/output.xlsx')
+    xlsx_dir = pathlib.Path(r'./HIAC/xlsx/xlsx3')
+
+    if file_name != "":
+        file_name_change = file_name + '.xlsx'
+        dst = os.path.join(xlsx_dir, file_name_change)
+        os.rename(src, dst)
+
+        fs = FileSystemStorage(xlsx_dir)
+        response = FileResponse(fs.open(file_name_change, 'rb'), content_type='application/vnd.ms-excel')
+
+        return response
+
+    else:
+        file_name_change = 'HIAC.xlsx'
+        dst = os.path.join(xlsx_dir, file_name_change)
+        os.rename(src, dst)
+
+        fs = FileSystemStorage(xlsx_dir)
+        response = FileResponse(fs.open(file_name_change, 'rb'), content_type='application/vnd.ms-excel')
+
+        return response
+
+
+# 통계를 출력 하는 함수
+def total_statistics(right_data):
+    balance_list = list(map(int, third_column_in_row(np.array(right_data).T[1].tolist())))
+
+    total_number = len(right_data)
+    total_deposit = sum_positive(balance_list)
+    total_expenditure = sum_negative(balance_list)
+    total_difference = total_deposit - total_expenditure
+
+    context = [total_number, total_deposit, total_expenditure, total_difference]
+
+    return context
 
 
 # 천의 자리 콤마 없애 주는 함수
