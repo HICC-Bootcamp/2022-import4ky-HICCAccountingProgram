@@ -339,48 +339,72 @@ def redo_data():
         return False
 
 
-def date_select(date_start, date_end):
+def date_select(date_start, date_end, total_index):
     date_list = extract_cols(leftTable, '거래일시')
+    adjust_date_end = date_end + ' 23:59:59'
+
     index_date = list()
     a = 0
-    for i in date_list:
-        if date_start <= i <= date_end:
-            index_date.append(a)
-        a += 1
+    if date_start and date_end == '':
+        index_date = total_index
+    else:
+        for i in date_list:
+            if date_start <= i <= adjust_date_end:
+                index_date.append(a)
+            a += 1
 
     print(index_date)
     return index_date
 
 
-def money_select(money):
+def money_select(money, total_index):
     money_list = extract_cols(leftTable, '거래금액')
-    index_money = [i for i in range(len(money_list)) if money in money_list[i]]
+    if money == '':
+        index_money = total_index
+    else:
+        index_money = [i for i in range(len(money_list)) if money in money_list[i]]
     print(index_money)
     return index_money
 
 
-def name_select(name):
+def name_select(name, total_index):
     namelist = extract_cols(leftTable, '내용')
-    index_name = [i for i in range(len(namelist)) if name in namelist[i]]
+
+    if name == '':
+        index_name = total_index
+    else:
+        index_name = [i for i in range(len(namelist)) if name in namelist[i]]
     print(index_name)
     return index_name
 
 
-def memo_select(memo):
+def memo_select(memo, total_index):
     memo_list = extract_cols(leftTable, '메모')
-    index_memo = [i for i in range(len(memo_list)) if memo in memo_list[i]]
+    if memo == '':
+        index_memo = total_index
+    else:
+        index_memo = [i for i in range(len(memo_list)) if memo in memo_list[i]]
     print(index_memo)
     return index_memo
 
 
 def intersection(name, money, date_start, date_end, memo):
     global intersection_index
-    date_index = date_select(date_start, date_end)
-    name_index = name_select(name)
-    money_index = money_select(money)
-    memo_index = memo_select(memo)
+    total_index_list = index_maker(len(leftTable))
+    date_index = date_select(date_start, date_end, total_index_list)
+    name_index = name_select(name, total_index_list)
+    money_index = money_select(money, total_index_list)
+    memo_index = memo_select(memo, total_index_list)
     intersection_index = list(set(name_index) & set(money_index) & set(date_index) & set(memo_index))
     print(intersection_index)
+
+
+def index_maker(total_index):
+    index = []
+    for i in range(0, total_index):
+        index.append(i)
+    return index
+
 
 
 #unlock_main('981227')
