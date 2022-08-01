@@ -134,6 +134,9 @@ def account_setting(request):
 
         rightTable = dataset_queue[queue_index]
 
+    if request.method == "POST" and 'modal_ok_btn' in request.POST:
+        pass
+
     return render(request, 'HIAC/account_setting.html', context)
 
 

@@ -201,7 +201,7 @@
             <div class="button_group">
                 <div class="button_group_side"></div>
                 <button type="button" form="search_form" onclick="show_result()" class="btn btn-secondary" id="modal_search">검색</button>
-                <button type="submit" form="find_modal_OK_form" class="btn btn-secondary" id="modal_ok">확인</button>
+                <button type="submit" form="find_modal_OK_form" name="modal_ok_btn" class="btn btn-secondary" id="modal_ok">확인</button>
                 <div class="button_group_side"></div>
             </div>
         </div>
@@ -363,7 +363,7 @@
                         inner += '</tr>';
                     });
 
-                    $('#modal_body').empty();
+                    $('#table_body').empty();
                     $('#modal_table').append(inner);
                 },
 
