@@ -134,9 +134,6 @@ def account_setting(request):
 
         rightTable = dataset_queue[queue_index]
 
-    if request.method == "POST" and 'modal_ok_btn' in request.POST:
-        pass
-
     return render(request, 'HIAC/account_setting.html', context)
 
 
@@ -170,6 +167,7 @@ def search_data(request):
 
     for i in range(0, len(search_dataframe_to_list)):
         search_dict = {
+            'search_index': intersection_index[i],
             'transaction_time': search_dataframe_to_list[i][0],
             'transaction_balance': search_dataframe_to_list[i][1],
             'transaction_detail': search_dataframe_to_list[i][2],
@@ -183,6 +181,38 @@ def search_data(request):
         search_list.append(search_dict)
 
     return JsonResponse({'dlist': search_list}, json_dumps_params={'ensure_ascii': False}, content_type="application/json")
+
+
+def ok_button(request):
+    global leftTable
+    json_response = json.loads(request.body)
+    modal_checklist_not_num = json_response.get('check_list')
+
+    modal_checklist = list(map(int, modal_checklist_not_num))
+    print(modal_checklist)
+
+    context = {}
+
+    if modal_checklist:
+        table_ = extract_rows(leftTable, list(map(int, modal_checklist)))
+        print(table_)
+        moveRight(table_)
+        deleteOverlap()
+        print(rightTable)
+        push_deque(rightTable)
+
+    right_data = rightTable
+    right_datalist = right_data.values.tolist()
+    context['right_datalist'] = right_datalist
+
+    # statistics 계산
+    if right_datalist:
+        total = total_statistics(right_datalist)
+        context['total_statistics'] = total
+    else:
+        context['total_statistics'] = [0, 0, 0, 0]
+
+    return render(request, 'HIAC/account_setting.html', context)
 
 
 # 통계를 출력 하는 함수
@@ -375,6 +405,7 @@ def date_select(date_start, date_end, total_index):
     print(index_date)
     return index_date
 
+
 def money_select(money, total_index):
     money_list = extract_cols(leftTable, '거래금액')
     new_money_list=third_column_in_row(money_list)
@@ -418,6 +449,7 @@ def intersection(name, money, date_start, date_end, memo):
     money_index = money_select(money, total_index_list)
     memo_index = memo_select(memo, total_index_list)
     intersection_index = list(set(name_index) & set(money_index) & set(date_index) & set(memo_index))
+    intersection_index.sort()
     print(intersection_index)
 
 
