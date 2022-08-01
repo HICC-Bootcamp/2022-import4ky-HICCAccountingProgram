@@ -354,6 +354,18 @@ def date_select(date_start, date_end, total_index):
     a = 0
     if date_start == "" and date_end == "":
         index_date = total_index
+
+    elif date_start != '' and date_end == '':
+        for i in date_list:
+            if date_start <= i:
+                index_date.append(a)
+            a +=1
+
+    elif date_start == "" and date_end != "":
+        for i in date_list:
+            if i <= adjust_date_end:
+                index_date.append(a)
+            a += 1
     else:
         for i in date_list:
             if date_start <= i <= adjust_date_end:
