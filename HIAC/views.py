@@ -393,6 +393,7 @@ def date_select(date_start, date_end, total_index):
     print(index_date)
     return index_date
 
+
 def money_select(money, total_index):
     money_list = extract_cols(leftTable, '거래금액')
     new_money_list=third_column_in_row(money_list)
