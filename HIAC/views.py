@@ -7,11 +7,13 @@ import pathlib
 import pandas as pd
 import numpy as np
 import json
+import os
 from collections import deque
 
 # Create your views here.
 leftTable = pd.DataFrame({'거래일시': [], '거래금액': [], '내용': [], '메모': []})
 rightTable = pd.DataFrame({'거래일시': [], '거래금액': [], '내용': [], '메모': []})
+totalStatistics = [0, 0, 0, 0]
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
@@ -50,20 +52,22 @@ def intro(request):
 
 
 def account_setting(request):
-    global dataset_queue, queue_index, leftTable, rightTable
+    global dataset_queue, queue_index, leftTable, rightTable, totalStatistics
 
     leftTable = leftTable.fillna("n/a")
     rightTable = rightTable.fillna("n/a")
 
     left_data = leftTable
     right_data = rightTable
+    total_statistics_ = totalStatistics
 
     left_datalist = left_data.values.tolist()
     right_datalist = right_data.values.tolist()
 
     context = {
         'left_datalist': left_datalist,
-        'right_datalist': right_datalist
+        'right_datalist': right_datalist,
+        'total_statistics': total_statistics_
     }
 
     # 옮기기 버튼을 눌렀을 때
@@ -83,9 +87,10 @@ def account_setting(request):
         # statistics 계산
         if right_datalist:
             total = total_statistics(right_datalist)
-            context['total_statistics'] = total
+            totalStatistics = total
+            context.update({'total_statistics': total})
         else:
-            context['total_statistics'] = [0, 0, 0, 0]
+            context.update({'total_statistics': [0, 0, 0, 0]})
 
     # 삭제 하기 버튼을 눌렀을 때
     if request.method == "POST" and 'delete_data' in request.POST:
@@ -101,6 +106,7 @@ def account_setting(request):
 
         if new_right_datalist:
             new_total = total_statistics(new_right_datalist)
+            totalStatistics = new_total
             context.update({'total_statistics': new_total})
         else:
             context.update({'total_statistics': [0, 0, 0, 0]})
@@ -114,6 +120,7 @@ def account_setting(request):
 
             if right_datalist:
                 total = total_statistics(right_datalist)
+                totalStatistics = total
                 context.update({'total_statistics': total})
             else:
                 context.update({'total_statistics': [0, 0, 0, 0]})
@@ -128,11 +135,28 @@ def account_setting(request):
 
             if right_datalist:
                 total = total_statistics(right_datalist)
+                totalStatistics = total
                 context.update({'total_statistics': total})
             else:
                 context.update({'total_statistics': [0, 0, 0, 0]})
 
         rightTable = dataset_queue[queue_index]
+
+    # download modal window 안의 저장 버튼을 눌렀을 때
+    if request.method == "POST" and 'file_name' in request.POST:
+        file_name = request.POST.get('file_name')
+
+        src = pathlib.Path(r'./HIAC/xlsx/xlsx3/output.xlsx')
+        xlsx_dir = pathlib.Path(r'./HIAC/xlsx/xlsx3')
+
+        if file_name != "":
+            temp = file_name + '.xlsx'
+            dst = os.path.join(xlsx_dir, temp)
+            os.rename(src, dst)
+        else:
+            temp = 'HIAC.xlsx'
+            dst = os.path.join(xlsx_dir, temp)
+            os.rename(src, dst)
 
     return render(request, 'HIAC/account_setting.html', context)
 
@@ -184,7 +208,7 @@ def search_data(request):
 
 
 def ok_button(request):
-    global leftTable
+    global leftTable, totalStatistics
     json_response = json.loads(request.body)
     modal_checklist_not_num = json_response.get('check_list')
 
@@ -208,6 +232,7 @@ def ok_button(request):
     # statistics 계산
     if right_datalist:
         total = total_statistics(right_datalist)
+        totalStatistics = total
         context['total_statistics'] = total
     else:
         context['total_statistics'] = [0, 0, 0, 0]
@@ -227,6 +252,29 @@ def total_statistics(right_data):
     context = [total_number, total_deposit, total_expenditure, total_difference]
 
     return context
+
+
+def download_button(request):
+    global totalStatistics, rightTable
+
+    statistics_dict = {
+        '거래 일시': totalStatistics[0],
+        '거래 금액': totalStatistics[1],
+        '거래 내용': totalStatistics[2],
+        '메모': totalStatistics[3]
+    }
+
+    print(statistics_dict)
+
+    statistics_dataframe = pd.DataFrame(statistics_dict, index=['통계'])
+
+    xlsx_dir = pathlib.Path(r'./HIAC/xlsx/xlsx3/output.xlsx')
+
+    with pd.ExcelWriter(xlsx_dir) as writer:
+        rightTable.to_excel(writer, sheet_name="추출 결과", index=False)
+        statistics_dataframe.to_excel(writer, sheet_name="통계", index=False)
+
+    return JsonResponse({"success_": "success"})
 
 
 # 천의 자리 콤마 없애 주는 함수

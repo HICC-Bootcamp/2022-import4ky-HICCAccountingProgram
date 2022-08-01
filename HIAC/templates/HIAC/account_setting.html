@@ -26,7 +26,9 @@
                 <span class="material-symbols-outlined"  title="설명" id="question">question_mark</span>
             </div>
             <div class="right_group">
-                <span class="material-symbols-outlined" title="다운로드 하기" id="download_excel">file_download</span>
+                <button type="button" onclick="download_button_clicked()" name="download_data" id="download_btn_feed">
+                    <span class="material-symbols-outlined" title="다운로드 하기" id="download_excel">file_download</span>
+                </button>
             </div>
         </div>
         <div class="mainWindow">
@@ -129,9 +131,6 @@
         <form method="post" id="redo_form">
             {% csrf_token %}
         </form>
-        <form method="post" id="download_form">
-            {% csrf_token %}
-        </form>
     </footer>
 
     <!--search modal window !-->
@@ -219,8 +218,11 @@
             </div>
             <div class="download_window">
                 <div class="file_name_input_window">
-                    <label for="file_name_input" id="file_name_input_label">문서명 입력</label>
-                    <input type="text" id="file_name_input" placeholder="문서명을 입력해주세요">
+                    <form method="post" id="download_form">
+                      {% csrf_token %}
+                      <label for="file_name_input" id="file_name_input_label">문서명 입력</label>
+                      <input type="text" name="file_name" id="file_name_input" placeholder="문서명을 입력해주세요">
+                    </form>
                 </div>
                 <div class="download_button_window">
                     <div class="download_button_window_side"></div>
@@ -294,6 +296,7 @@
     <script>
         let url_search_data = {% url 'search_data' %};
         let url_ok_button = {% url 'ok_button' %};
+        let url_download_button = {% url 'download_button' %};
 
         function show_result() {
             let date_start = document.getElementById('start_day').value;
@@ -393,9 +396,12 @@
             let check_list = [];
 
             modal_checkboxes.forEach(function (checkbox) {
-               console.log(checkbox.value);
-               check_list.push(checkbox.value);
+               if (checkbox.checked === true){
+                   check_list.push(checkbox.value);
+               }
             });
+
+            console.log(check_list);
 
             let param = {
                 'check_list': check_list,
@@ -412,6 +418,21 @@
                  complete: function() {
                      alert("move success");
                      document.location.reload();
+                 }
+             });
+        }
+
+        function download_button_clicked() {
+             $.ajax({
+                 url: url_download_button,
+                 type: "POST",
+                 headers: {
+                     'X-CSRFTOKEN': '{{ csrf_token }}'
+                 },
+                 data: null,
+                 complete: function(response) {
+                     let success = JSON.parse(response.responseText);
+                     console.log(success.success_);
                  }
              });
         }
