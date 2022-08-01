@@ -50,10 +50,14 @@ def intro(request):
 
 
 def account_setting(request):
-    global dataset_queue, queue_index, rightTable
+    global dataset_queue, queue_index, leftTable, rightTable
+
+    leftTable = leftTable.fillna("n/a")
+    rightTable = rightTable.fillna("n/a")
 
     left_data = leftTable
     right_data = rightTable
+
     left_datalist = left_data.values.tolist()
     right_datalist = right_data.values.tolist()
 
@@ -345,7 +349,7 @@ def date_select(date_start, date_end, total_index):
 
     index_date = list()
     a = 0
-    if date_start and date_end == '':
+    if date_start == "" and date_end == "":
         index_date = total_index
     else:
         for i in date_list:

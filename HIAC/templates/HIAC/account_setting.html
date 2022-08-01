@@ -179,11 +179,11 @@
                 <div class="show_result_side"></div>
                 <div class="show_result_table">
                     <table class="table" id="modal_table">
-                        <thead class="thead-light">
+                        <thead class="thead-light" id="modal_thead">
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">
-                                    <input type="checkbox" id="modal_all_check" onchange="checkAll(this)"/>
+                                    <input type="checkbox" id="modal_all_check" onchange="modalCheckAll(this)"/>
                                 </th>
                                 <th scope="col">거래 일자</th>
                                 <th scope="col">거래 금액</th>
@@ -355,7 +355,7 @@
                         let show_idx = parseInt(idx) + 1;
                         inner += '<tr id = "no'+ show_idx + '">';
                         inner += '<th scope="row" id="row_num' + show_idx + '">' + show_idx + '</th>';
-                        inner += '<td><div class="form-check"> <input class="form-check-input" name="modal_checkbox[]" type="checkbox" value="' + show_idx + '"> </div> </td>';
+                        inner += '<td><div class="form-check"> <input  type="checkbox" class="alloc_checkbox" name="modal_checkbox[]" value="' + show_idx + '"> </div> </td>';
                         inner += '<td>' + val.transaction_time + '</td>';
                         inner += '<td>' + val.transaction_balance + '</td>';
                         inner += '<td>' + val.transaction_detail + '</td>';
@@ -363,12 +363,30 @@
                         inner += '</tr>';
                     });
 
-                    $('#table_body').empty();
+                    $('#modal_body').empty();
                     $('#modal_table').append(inner);
                 },
 
             });
         }
+
+        function modalCheckAll(myCheckbox) {
+
+            if (myCheckbox.checked === true) {
+                let modal_checkboxes = document.querySelectorAll("input[name = 'modal_checkbox[]']");
+
+                modal_checkboxes.forEach(function (checkbox) {
+                    checkbox.checked = true;
+                });
+            } else {
+                let modal_checkboxes = document.querySelectorAll("input[name = 'modal_checkbox[]']");
+
+                modal_checkboxes.forEach(function (checkbox) {
+                    checkbox.checked = false;
+                });
+            }
+        }
+
     </script>
 
 {% endblock %}
