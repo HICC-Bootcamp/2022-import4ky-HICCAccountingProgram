@@ -92,9 +92,15 @@
     margin-right: 10px;
 }
 
+.toolbar .right_group #download_btn_feed {
+    padding: 0;
+    border: none;
+    float: right;
+    background-color:transparent;
+}
+
 .toolbar .right_group #download_excel {
     font-size: 48px;
-    float: right;
     margin-right: 10px;
     cursor: pointer;
 }
