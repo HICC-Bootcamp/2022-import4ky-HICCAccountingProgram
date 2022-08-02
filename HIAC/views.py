@@ -345,7 +345,8 @@ def unlock(file_name, passwd, output_folder):
     temp.close()
 
 
-def read_table(): # 필요한 테이블 가져 오는 함수
+# 필요한 테이블 가져 오는 함수
+def read_table():
     url = pathlib.Path(r'./HIAC/xlsx/xlsx2')
     excel_files = list(url.glob('*.xlsx'))
     df = pd.read_excel(excel_files[0], header=10, usecols=[1, 3, 6, 7], engine='openpyxl')
@@ -449,7 +450,7 @@ def date_select(date_start, date_end, total_index):
         for i in date_list:
             if date_start <= i:
                 index_date.append(a)
-            a +=1
+            a += 1
 
     elif date_start == "" and date_end != "":
         for i in date_list:
@@ -468,11 +469,11 @@ def date_select(date_start, date_end, total_index):
 
 def money_select(money, total_index):
     money_list = extract_cols(leftTable, '거래금액')
-    new_money_list=third_column_in_row(money_list)
+    new_money_list = third_column_in_row(money_list)
     if money == '':
         index_money = total_index
     else:
-        new_money = money.replace(',','')
+        new_money = money.replace(',', '')
         new_money = money.replace('.', '')
         new_money = money.replace(' ', '')
         index_money = [i for i in range(len(new_money_list)) if new_money in new_money_list[i]]
@@ -520,20 +521,19 @@ def index_maker(total_index):
     return index
 
 
+# unlock_main('981227')
 
-#unlock_main('981227')
-
-#회계정보페이지 test
-#row_list = [1, 2, 3, 4]
-#col_list = ['거래일시']
+# 회계정보페이지 test
+# row_list = [1, 2, 3, 4]
+# col_list = ['거래일시']
 table = read_table()
-#print(extract_rows(table, row_list))
-#print(extract_cols(table, col_list))
-#print(extract_cols(table, '내용'))
-#len(extract_cols(table, '내용'))
+# print(extract_rows(table, row_list))
+# print(extract_cols(table, col_list))
+# print(extract_cols(table, '내용'))
+# len(extract_cols(table, '내용'))
 readExel()
-#data={'거래일시':'2022.06.30 23:33:34','거래금액':'-370,500','내용':'어른이대공원(본점)','메모' : np.nan}
-#rightTable = leftTable
-#moveRight(data)
-#deleteOverlap()
-#print(leftTable)
+# data={'거래일시':'2022.06.30 23:33:34','거래금액':'-370,500','내용':'어른이대공원(본점)','메모' : np.nan}
+# rightTable = leftTable
+# moveRight(data)
+# deleteOverlap()
+# print(leftTable)
