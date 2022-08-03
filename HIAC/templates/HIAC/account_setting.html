@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block body %}
-
+{% if user.is_authenticated %}
     <header>
         <a href="{% url 'HIAC:intro' %}"> <img src="https://cdn.pixabay.com/photo/2013/07/12/12/36/letter-146002_1280.png"
                                           alt="HIAC" id="logo"></a>
@@ -438,5 +438,11 @@
         }
 
     </script>
+
+{% else %}
+    <div class="login_error">
+        비정상적인 접근입니다. 로그인 후 이용하시기 바랍니다.
+    </div>
+{% endif %}
 
 {% endblock %}
