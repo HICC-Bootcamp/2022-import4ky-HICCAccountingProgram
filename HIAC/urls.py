@@ -16,12 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf import settings
+from django.contrib.auth import views as auth_views
 from django.conf.urls.static import static
 
 from . import views
 
+app_name = 'HIAC'
+
 urlpatterns = [
-    path('', views.intro, name='intro'),
+    path('login/', views.login, name='login'),
+    path('logout/', views.logout, name='logout'),
+    path('signup/', views.signup, name='signup'),
+    path('intro/', views.intro, name='intro'),
     path('account_setting/', views.account_setting, name='account_setting'),
     path('search_data/', views.search_data, name='search_data'),
     path('ok_button/', views.ok_button, name='ok_button'),

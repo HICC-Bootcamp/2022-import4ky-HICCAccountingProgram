@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+        <div class="input-form-background row">
+            <div class="input-form col-md-12 mx-auto">
+                <h4 class="mb-3">SignUp</h4>
+                <form class="validation-form" method="post" action="{% url 'HIAC:signup' %}">
+                    {% csrf_token %}
+                    {% include "HIAC/form_errors.html" %}
+                    <div class="mb-3">
+                        <label for="username">username</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder=""
+                               value="{{ form.username.value|default_if_none:'' }}" required>
+                        <div class="invalid-feedback">
+                            Name input is required.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password1">Password</label>
+                        <input type="password" class="form-control" id="password1" name="password1"
+                               value="{{ form.password1.value|default_if_none:'' }}" required>
+                        <div class="invalid-feedback">
+                            Password input is required.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password2">Confirm Password</label>
+                        <input type="password" class="form-control" id="password2" name="password2"
+                               value="{{ form.password2.value|default_if_none:'' }}" required>
+                        <div class="invalid-feedback">
+                            password input is required.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="hicc@hongik.ac.kr"
+                               value="{{ form.email.value|default_if_none:'' }}" required>
+                        <div class="invalid-feedback">
+                            Email input is required.
+                        </div>
+                    </div>
+                    <div class="mb-4"></div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-black">
+                        Register
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+            const forms = document.getElementsByClassName('validation-form');
+
+            Array.prototype.filter.call(forms, (form) => {
+                form.addEventListener('submit', function (e) {
+                    if (form.checkValidity() === false) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    </script>
+
+{% endblock %}

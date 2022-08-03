@@ -3,7 +3,7 @@
 {% block body %}
 
     <header>
-        <a href="{% url 'intro' %}"> <img src="https://cdn.pixabay.com/photo/2013/07/12/12/36/letter-146002_1280.png"
+        <a href="{% url 'HIAC:intro' %}"> <img src="https://cdn.pixabay.com/photo/2013/07/12/12/36/letter-146002_1280.png"
                                           alt="HIAC" id="logo"></a>
     </header>
 
@@ -218,7 +218,7 @@
             </div>
             <div class="download_window">
                 <div class="file_name_input_window">
-                    <form method="post" action="{% url 'download' %}" id="download_form">
+                    <form method="post" action="{% url 'HIAC:download' %}" id="download_form">
                       {% csrf_token %}
                       <label for="file_name_input" id="file_name_input_label">문서명 입력</label>
                       <input type="text" name="file_name" id="file_name_input" placeholder="문서명을 입력해주세요">
@@ -294,9 +294,9 @@
     </style>
 
     <script>
-        let url_search_data = {% url 'search_data' %};
-        let url_ok_button = {% url 'ok_button' %};
-        let url_download_button = {% url 'download_button' %};
+        let url_search_data = {% url 'HIAC:search_data' %};
+        let url_ok_button = {% url 'HIAC:ok_button' %};
+        let url_download_button = {% url 'HIAC:download_button' %};
 
         function show_result() {
             let date_start = document.getElementById('start_day').value;

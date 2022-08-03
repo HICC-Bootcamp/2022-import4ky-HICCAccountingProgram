@@ -1,6 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse, FileResponse
 from django.core.files.storage import FileSystemStorage
+
+from django.contrib import auth
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+
+from collections import deque
 
 import msoffcrypto
 import pathlib
@@ -8,7 +15,7 @@ import pandas as pd
 import numpy as np
 import json
 import os
-from collections import deque
+
 
 # Create your views here.
 leftTable = pd.DataFrame({'거래일시': [], '거래금액': [], '내용': [], '메모': []})
@@ -26,8 +33,48 @@ queue_index = 0
 intersection_index = list()
 
 
+def signup(request):
+    if request.method == "POST":
+        if request.POST.get('password1') == request.POST.get('password2'):
+            user = User.objects.create_user(
+                username=request.POST.get('username'),
+                password=request.POST.get('password1'),
+                email=request.POST.get('email'),
+            )
+            auth.login(request, user)
+            return redirect('HIAC:login')
+        return render(request, 'HIAC/signup.html')
+    else:
+        form = UserCreationForm
+        return render(request, 'HIAC/signup.html', {'form': form})
+
+
+def login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+            return redirect('HIAC:intro')
+        else:
+            context = {
+                'error': 'username or password is incorrect.'
+            }
+            return render(request, 'HIAC/login.html', context)
+    else:
+        return render(request, 'HIAC/login.html')
+
+
+def logout(request):
+    auth.logout(request)
+    return redirect('HIAC:login')
+
+
 def intro(request):
     context = {}
+    user = request.user
+    context['user'] = user
     if request.method == 'POST' and 'excel' in request.FILES:
         uploaded_file = request.FILES['excel']
         fs = FileSystemStorage()
@@ -37,8 +84,8 @@ def intro(request):
             'password_error': False
         }
 
-    if request.method == "POST" and 'password' in request.POST:
-        pw = request.POST.get('password')
+    if request.method == "POST" and 'password_excel' in request.POST:
+        pw = request.POST.get('password_excel')
         try:
             unlock_main(pw)
             readExel()
