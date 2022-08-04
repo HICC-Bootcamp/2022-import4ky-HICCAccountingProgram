@@ -3,8 +3,14 @@
 {% block body %}
 {% if user.is_authenticated %}
     <header>
-        <a href="{% url 'HIAC:intro' %}"> <img src="https://cdn.pixabay.com/photo/2013/07/12/12/36/letter-146002_1280.png"
+        <div class="main_header_window">
+            <a href="{% url 'HIAC:intro' %}"> <img src="https://cdn.pixabay.com/photo/2013/07/12/12/36/letter-146002_1280.png"
                                           alt="HIAC" id="logo"></a>
+            <h2 id="main_header">{{ user.username }}님의 회계 편집 창</h2>
+            <button type="submit" class="btn btn-secondary" id="logout_btn">
+                <a href="{% url 'HIAC:logout' %}" id="logout_btn_a_tag">logout</a>
+            </button>
+        </div>
     </header>
 
     <article>

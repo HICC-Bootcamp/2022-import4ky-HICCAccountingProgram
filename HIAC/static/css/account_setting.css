@@ -1,8 +1,27 @@
+.main_header_window {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+
 #logo {
+    flex: 0 0 40px;
     width: 50px;
     height: 50px;
     margin: 20px 20px 20px 20px;
     border: 3px solid #ccc;
+}
+
+#logout_btn {
+    flex: 0 0 40px;
+}
+
+#logout_btn_a_tag {
+    text-decoration: none;
+    color: white;
 }
 
 .toolbar {
