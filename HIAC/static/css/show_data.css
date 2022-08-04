@@ -1,0 +1,70 @@
+.show_data_header_window {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#show_logo {
+    flex: 0 0 40px;
+    width: 50px;
+    height: 50px;
+    margin: 20px 20px 20px 20px;
+    border: 3px solid #ccc;
+}
+
+#show_logout_btn {
+    flex: 0 0 40px;
+}
+
+#show_data_logout_btn_a_tag {
+    text-decoration: none;
+    color: white;
+}
+
+.show_toolbar {
+    margin-top: 10px;
+    width: 1204px;
+    height: 70px;
+    border: 1px solid black;
+    background-color: #ccc;
+}
+
+.search_mainWindow {
+    width: 1204px;
+    height: 1000px;
+}
+
+.search_leftTable {
+    margin: 0;
+    padding: 0;
+    width: 600px;
+    height: 1000px;
+    float: left;
+    border: 1px solid black;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+
+.search_rightTable {
+    width: 600px;
+    height: 1000px;
+    float: right;
+    border: 1px solid black;
+}
+
+.search_data_requirement {
+    width: 600px;
+    height: 600px;
+    float: right;
+    border: 1px solid black;
+}
+
+.show_total {
+    width: 600px;
+    height: 400px;
+    float: right;
+    border: 1px solid black;
+}

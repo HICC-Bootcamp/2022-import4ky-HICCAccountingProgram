@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% if user.is_authenticated %}
+    <header>
+        <div class="show_data_header_window">
+            <a href="{% url 'HIAC:intro' %}"> <img src="https://cdn.pixabay.com/photo/2013/07/12/12/36/letter-146002_1280.png"
+                                          alt="HIAC" id="show_logo"></a>
+            <h2 id="show_data_header">{{ user.username }}님의 데이터 보기</h2>
+            <button type="submit" class="btn btn-secondary" id="show_logout_btn">
+                <a href="{% url 'HIAC:logout' %}" id="show_data_logout_btn_a_tag">logout</a>
+            </button>
+        </div>
+    </header>
+
+    <article>
+        <div class="show_toolbar">
+
+        </div>
+        <div class="search_mainWindow">
+            <div class="search_leftTable">
+                <form id="show_left_table_form" method="post">
+                {% csrf_token %}
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">거래 일자</th>
+                                <th scope="col">거래 금액</th>
+                                <th scope="col">거래 내용</th>
+                                <th scope="col">메모</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for left_item in show_left_datalist %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ left_item.0| safe }}</td>
+                                <td>{{ left_item.1| safe }}</td>
+                                <td>{{ left_item.2| safe }}</td>
+                                <td>{{ left_item.3| safe }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="search_rightTable">
+                <div class="search_data_requirement">
+                    <form method="post" id="search_data_form">
+                        {% csrf_token %}
+                        <div class="search_data_find_date">
+                            <input type="checkbox" id="search_date_feed" onchange="dateInputManage()"/>
+                            <label for="date_feed" id="search_date_label">기간</label>
+                            <label for="start_day" id="search_start_day_label">시작일</label>
+                            <input type="date" id="search_start_day" disabled>
+                            <label for="end_day" id="search_end_day_label">종료일</label>
+                            <input type="date" id="search_end_day" disabled>
+                        </div>
+                        <div class="search_data_find_detail">
+                            <input type="checkbox" id="search_detail_feed" onchange="detailInputManage()"/>
+                            <label for="detail_feed" id="search_detail_label">내용</label>
+                            <input type="text" id="search_detail_input" placeholder="내용을 입력해 주세요" disabled>
+                        </div>
+                        <div class="search_data_find_balance">
+                            <input type="checkbox" id="search_balance_feed" onchange="balanceInputManage()"/>
+                            <label for="balance_feed" id="search_balance_label">금액</label>
+                            <input type="text" id="search_balance_input" placeholder="금액을 입력해 주세요" disabled>
+                        </div>
+                        <div class="search_data_find_memo">
+                            <input type="checkbox" id="search_memo_feed" onchange="memoInputManage()"/>
+                            <label for="memo_feed" id="search_memo_label">메모</label>
+                            <input type="text" id="search_memo_input" placeholder="메모를 입력해 주세요" disabled>
+                        </div>
+                    </form>
+                </div>
+                <div class="show_total">
+                     <table class="table">
+                          <thead class="thead-light">
+                          <tr>
+                              <th scope="col">총 인원</th>
+                              <th scope="col">총 입금</th>
+                              <th scope="col">총 지출</th>
+                              <th scope="col">입금-지출 차액</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                                <td>{{ total_statistics.0 }}</td>
+                                <td>{{ total_statistics.1 }}</td>
+                                <td>{{ total_statistics.2 }}</td>
+                                <td>{{ total_statistics.3 }}</td>
+                            </tr>
+                          </tbody>
+                     </table>
+                </div>
+            </div>
+        </div>
+    </article>
+
+
+    <!-- Google material icon, font 적용 !-->
+    <style>
+        .material-symbols-outlined {
+             font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 48
+        }
+
+        body {
+            font-family: 'GangwonEdu_OTFBoldA', sans-serif;
+            width: 1204px;
+            height: 1100px;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+{% else %}
+    <div class="login_error">
+        비정상적인 접근입니다. 로그인 후 이용하시기 바랍니다.
+    </div>
+{% endif %}
+
+{% endblock %}

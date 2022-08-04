@@ -322,6 +322,10 @@ def download(request):
         return response
 
 
+def show_data(request):
+    return render(request, 'HIAC/show_data.html')
+
+
 # 통계를 출력 하는 함수
 def total_statistics(right_data):
     balance_list = list(map(int, third_column_in_row(np.array(right_data).T[1].tolist())))

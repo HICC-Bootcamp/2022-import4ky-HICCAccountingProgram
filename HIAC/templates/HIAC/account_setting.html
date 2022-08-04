@@ -29,9 +29,15 @@
                 <button type="submit" form="left_table_form" name="right_move" id="right_move_btn">
                     <span class="material-symbols-outlined" title="옮기기" id="east">east</span>
                 </button>
-                <span class="material-symbols-outlined"  title="설명" id="question">question_mark</span>
+                <span class="material-symbols-outlined" title="설명" id="question">question_mark</span>
             </div>
             <div class="right_group">
+                <a href="{% url 'HIAC:show_data' %}" id="show_data_a_tag">
+                    <span class="material-symbols-outlined" title="업로드한 데이터 보기" id="show_data">database</span>
+                </a>
+                <button type="submit" form="upload_form" id="upload_btn" name="upload_data">
+                    <span class="material-symbols-outlined" title="업로드 하기" id="upload_excel">file_upload</span>
+                </button>
                 <button type="button" onclick="download_button_clicked()" name="download_data" id="download_btn_feed">
                     <span class="material-symbols-outlined" title="다운로드 하기" id="download_excel">file_download</span>
                 </button>
@@ -135,6 +141,9 @@
             {% csrf_token %}
         </form>
         <form method="post" id="redo_form">
+            {% csrf_token %}
+        </form>
+        <form method="post" id="upload_form">
             {% csrf_token %}
         </form>
     </footer>

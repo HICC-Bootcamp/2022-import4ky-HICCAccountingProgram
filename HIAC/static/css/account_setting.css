@@ -105,10 +105,37 @@
 .toolbar .right_group {
     position: relative;
     float: right;
-    width: 400px;
+    width: 174px;
     height: 48px;
     top: 11px;
     margin-right: 10px;
+}
+
+.toolbar .right_group #show_data_a_tag {
+    text-decoration: none;
+    color: black;
+    padding: 0;
+    border: none;
+    float: left;
+    background-color:transparent;
+}
+
+.toolbar .right_group #show_data {
+    font-size: 48px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.toolbar .right_group #upload_btn {
+    padding: 0;
+    border: none;
+    background-color:transparent;
+}
+
+.toolbar .right_group #upload_excel {
+    font-size: 48px;
+    margin-right: 10px;
+    cursor: pointer;
 }
 
 .toolbar .right_group #download_btn_feed {
