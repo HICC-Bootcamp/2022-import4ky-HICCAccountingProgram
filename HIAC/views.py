@@ -401,13 +401,13 @@ def read_table():
 
 
 # 원하는 행(가로줄)의 정보를 가져 오는 함수
-def extract_rows(table, row_list):
-    return table.loc[row_list]
+def extract_rows(table_, row_list):
+    return table_.loc[row_list]
 
 
 # 원하는 열(새로줄)의 정보를 가져 오는 함수
-def extract_cols(table, col_list):
-    return table[col_list]
+def extract_cols(table_, col_list):
+    return table_[col_list]
 
 
 # 회계 정보 페이지
@@ -570,7 +570,7 @@ def index_maker(total_index):
 
 # unlock_main('981227')
 
-# 회계정보페이지 test
+# 회계 정보 페이지 test
 # row_list = [1, 2, 3, 4]
 # col_list = ['거래일시']
 table = read_table()
