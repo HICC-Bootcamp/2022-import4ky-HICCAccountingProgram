@@ -32,13 +32,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for left_item in show_left_datalist %}
+                            {% for data in datalist %}
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
-                                <td>{{ left_item.0| safe }}</td>
-                                <td>{{ left_item.1| safe }}</td>
-                                <td>{{ left_item.2| safe }}</td>
-                                <td>{{ left_item.3| safe }}</td>
+                                <td>{{ data.transaction_date| safe }}</td>
+                                <td>{{ data.transaction_balance| safe }}</td>
+                                <td>{{ data.transaction_detail| safe }}</td>
+                                <td>{{ data.transaction_memo| safe }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -47,10 +47,15 @@
             </div>
             <div class="search_rightTable">
                 <div class="search_data_requirement">
+                    <div class="search_data_requirement_title_window">
+                        <div class="search_data_requirement_title_side"></div>
+                        <h3 id="search_data_requirement_title">검색 조건 설정</h3>
+                        <div class="search_data_requirement_title_side"></div>
+                    </div>
                     <form method="post" id="search_data_form">
                         {% csrf_token %}
                         <div class="search_data_find_date">
-                            <input type="checkbox" id="search_date_feed" onchange="dateInputManage()"/>
+                            <input type="checkbox" id="search_date_feed" onchange="showDateInputManage()"/>
                             <label for="date_feed" id="search_date_label">기간</label>
                             <label for="start_day" id="search_start_day_label">시작일</label>
                             <input type="date" id="search_start_day" disabled>
@@ -58,21 +63,26 @@
                             <input type="date" id="search_end_day" disabled>
                         </div>
                         <div class="search_data_find_detail">
-                            <input type="checkbox" id="search_detail_feed" onchange="detailInputManage()"/>
+                            <input type="checkbox" id="search_detail_feed" onchange="showDetailInputManage()"/>
                             <label for="detail_feed" id="search_detail_label">내용</label>
                             <input type="text" id="search_detail_input" placeholder="내용을 입력해 주세요" disabled>
                         </div>
                         <div class="search_data_find_balance">
-                            <input type="checkbox" id="search_balance_feed" onchange="balanceInputManage()"/>
+                            <input type="checkbox" id="search_balance_feed" onchange="showBalanceInputManage()"/>
                             <label for="balance_feed" id="search_balance_label">금액</label>
                             <input type="text" id="search_balance_input" placeholder="금액을 입력해 주세요" disabled>
                         </div>
                         <div class="search_data_find_memo">
-                            <input type="checkbox" id="search_memo_feed" onchange="memoInputManage()"/>
+                            <input type="checkbox" id="search_memo_feed" onchange="showMemoInputManage()"/>
                             <label for="memo_feed" id="search_memo_label">메모</label>
                             <input type="text" id="search_memo_input" placeholder="메모를 입력해 주세요" disabled>
                         </div>
                     </form>
+                    <div class="search_button_group">
+                        <div class="search_button_group_side"></div>
+                        <button type="submit" class="btn btn-secondary" form="search_data_form" id="search_form_btn" name="search_form_btn">검색</button>
+                        <div class="search_button_group_side"></div>
+                    </div>
                 </div>
                 <div class="show_total">
                      <table class="table">

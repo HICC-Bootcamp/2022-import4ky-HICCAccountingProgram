@@ -62,6 +62,161 @@
     border: 1px solid black;
 }
 
+.search_data_requirement_title_window {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-weight: bold;
+    align-items: center;
+    font-size: 20px;
+    height: 43.5px;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
+
+#search_data_requirement_title_side {
+    flex: 0 0 40px;
+    text-align: center;
+}
+
+#search_data_requirement_title {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+#search_data_form {
+    width: 600px;
+    height: 300px;
+    margin-top: 70px;
+}
+
+.search_data_find_date {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+
+#search_date_feed {
+    width: 20px;
+    height: 20px;
+}
+
+#search_date_label {
+    text-align: center;
+    width: 70px;
+    font-size: 15px;
+}
+
+#search_start_day_label {
+    text-align: center;
+    width: 50px;
+    font-size: 15px;
+}
+
+#search_start_day {
+    width: 150px;
+    height: 30px;
+}
+
+#search_end_day_label {
+    text-align: center;
+    width: 50px;
+    font-size: 15px;
+}
+
+#search_end_day {
+    width: 150px;
+    height: 30px;
+}
+
+.search_data_find_detail {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+
+#search_detail_feed {
+    width: 20px;
+    height: 20px;
+}
+
+#search_detail_label {
+    text-align: center;
+    width: 70px;
+    font-size: 15px;
+}
+
+#search_detail_input {
+    width: 400px;
+    height: 30px;
+}
+
+.search_data_find_balance {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+
+#search_balance_feed {
+    width: 20px;
+    height: 20px;
+}
+
+#search_balance_label {
+    text-align: center;
+    width: 70px;
+    font-size: 15px;
+}
+
+#search_balance_input {
+    width: 400px;
+    height: 30px;
+}
+
+.search_data_find_memo {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#search_memo_feed {
+    width: 20px;
+    height: 20px;
+}
+
+#search_memo_label {
+    text-align: center;
+    width: 70px;
+    font-size: 15px;
+}
+
+#search_memo_input {
+    width: 400px;
+    height: 30px;
+}
+
+.search_button_group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 70px;
+    margin-top: 20px;
+}
+
+.search_button_group_side {
+    flex: 0 0 40px;
+    text-align: center;
+}
+
+#search_form_btn {
+    width: 60px;
+    height: 30px;
+}
+
 .show_total {
     width: 600px;
     height: 400px;

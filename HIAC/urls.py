@@ -33,6 +33,7 @@ urlpatterns = [
     path('ok_button/', views.ok_button, name='ok_button'),
     path('download_button/', views.download_button, name='download_button'),
     path('donwload/', views.download, name='download'),
+    path('upload_data/', views.upload_data, name='upload_data'),
     path('show_data/', views.show_data, name='show_data'),
 ]
 

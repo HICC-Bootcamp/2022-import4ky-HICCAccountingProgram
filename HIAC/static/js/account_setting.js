@@ -31,3 +31,13 @@ function checkAll(myCheckBox) {
 		});
 	}
 }
+
+function alert_result_database_button() {
+
+	if (database_alert_result === "True") {
+		alert("정상적으로 데이터베이스에 반영되었습니다.");
+	}
+	else {
+		alert("error");
+	}
+}

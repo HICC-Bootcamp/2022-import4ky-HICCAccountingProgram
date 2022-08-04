@@ -35,7 +35,7 @@
                 <a href="{% url 'HIAC:show_data' %}" id="show_data_a_tag">
                     <span class="material-symbols-outlined" title="업로드한 데이터 보기" id="show_data">database</span>
                 </a>
-                <button type="submit" form="upload_form" id="upload_btn" name="upload_data">
+                <button type="submit" form="upload_form" id="upload_btn" name="upload_data" onclick="alert_result_database_button()">
                     <span class="material-symbols-outlined" title="업로드 하기" id="upload_excel">file_upload</span>
                 </button>
                 <button type="button" onclick="download_button_clicked()" name="download_data" id="download_btn_feed">
@@ -143,7 +143,7 @@
         <form method="post" id="redo_form">
             {% csrf_token %}
         </form>
-        <form method="post" id="upload_form">
+        <form method="post" id="upload_form" action="{% url 'HIAC:upload_data' %}">
             {% csrf_token %}
         </form>
     </footer>
@@ -312,6 +312,7 @@
         let url_search_data = {% url 'HIAC:search_data' %};
         let url_ok_button = {% url 'HIAC:ok_button' %};
         let url_download_button = {% url 'HIAC:download_button' %};
+        let database_alert_result = {{ result }};
 
         function show_result() {
             let date_start = document.getElementById('start_day').value;

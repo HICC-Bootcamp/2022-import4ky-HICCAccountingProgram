@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 from collections import deque
+from datetime import datetime
+from .models import AccountData
 
 import msoffcrypto
 import pathlib
@@ -322,8 +324,70 @@ def download(request):
         return response
 
 
+def upload_data(request):
+    global rightTable
+
+    if not rightTable.empty:
+        # 거래 일시를 db에 넣기 위해 날짜 포맷을 변경 한다.
+        date_list = extract_cols(rightTable, '거래일시').values.tolist()
+        balance_list = extract_cols(rightTable, '거래금액').values.tolist()
+
+        format_date_list = list()
+
+        # 날짜 포맷
+        for date in date_list:
+            format_date_list.append(date_format_conversion(date))
+
+        # 금액 포맷
+        format_balance_list = third_column_in_row(balance_list)
+
+        rightTable['거래일시'] = format_date_list
+        rightTable['거래금액'] = format_balance_list
+
+        for index, row in rightTable.iterrows():
+            model = AccountData.objects.create(
+                user=request.user.username,
+                transaction_date=row['거래일시'],
+                transaction_balance=row['거래금액'],
+                transaction_detail=row['내용'],
+                transaction_memo=row['메모']
+            )
+            model.save()
+
+        # 중복 제거 작업 (들어갈 때 중복이 없더라도 무조건 다시 넣는다.)
+        df = pd.DataFrame(list(AccountData.objects.all().values()))
+        df = df.drop_duplicates(subset=["user", "transaction_date"], keep="first")
+        AccountData.objects.all().delete()
+
+        for index, row in df.iterrows():
+            delete_duplicate_model = AccountData.objects.create(
+                user=request.user.username,
+                transaction_date=row['transaction_date'],
+                transaction_balance=row['transaction_balance'],
+                transaction_detail=row['transaction_detail'],
+                transaction_memo=row['transaction_memo']
+            )
+            delete_duplicate_model.save()
+
+        context = {
+            'result': True
+        }
+
+    else:
+        context = {
+            'result': False
+        }
+
+    return render(request, 'HIAC/account_setting.html', context)
+
+
 def show_data(request):
-    return render(request, 'HIAC/show_data.html')
+    datalist = AccountData.objects.filter(user=request.user)
+    context = {
+        'datalist': datalist
+    }
+
+    return render(request, 'HIAC/show_data.html', context)
 
 
 # 통계를 출력 하는 함수
@@ -354,6 +418,11 @@ def first_column_in_row(data):
     valid_str = data.replace('-', '.')
 
     return valid_str
+
+
+def date_format_conversion(date_str):
+    date_formatter = "%Y.%m.%d %H:%M:%S"
+    return datetime.strptime(date_str, date_formatter)
 
 
 # 총 입금액 계산
