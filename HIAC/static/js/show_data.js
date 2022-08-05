@@ -12,10 +12,13 @@ function showDateInputManage() {
      if (showDateCheckbox.checked === true) {
         startDate.disabled = false;
         endDate.disabled = false;
+        $("#search_date_feed").val(0);
+
     }
     else {
         startDate.disabled = true;
         endDate.disabled = true;
+        $("#search_date_feed").val(1);
     }
 }
 
@@ -25,9 +28,11 @@ function showDetailInputManage() {
 
      if (showDetailCheckbox.checked === true) {
         detailInput.disabled = false;
+        $("#search_detail_feed").val(0);
     }
     else {
         detailInput.disabled = true;
+        $("#search_detail_feed").val(1);
     }
 }
 
@@ -38,9 +43,11 @@ function showBalanceInputManage() {
 
      if (showBalanceCheckbox.checked === true) {
         balanceInput.disabled = false;
+        $("#search_balance_feed").val(0);
     }
     else {
         balanceInput.disabled = true;
+        $("#search_balance_feed").val(1);
     }
 }
 
@@ -51,9 +58,10 @@ function showMemoInputManage() {
 
      if (showMemoCheckbox.checked === true) {
         memoInput.disabled = false;
+        $("#search_memo_feed").val(0);
     }
     else {
         memoInput.disabled = true;
+        $("#search_memo_feed").val(1);
     }
 }
-

@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 from collections import deque
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from .models import AccountData
 
 import msoffcrypto
@@ -163,7 +163,6 @@ def account_setting(request):
     # 뒤로 가기 버튼을 눌렀을 때
     if request.method == "POST" and 'undo_data' in request.POST:
         if undo_data():
-            print(queue_index)
             right_datalist = dataset_queue[queue_index].values.tolist()
             context.update({'right_datalist': right_datalist})
 
@@ -206,12 +205,6 @@ def search_data(request):
     start_ = first_column_in_row(start)
     end_ = first_column_in_row(end)
 
-    print(start_)
-    print(end_)
-    print(detail)
-    print(balance)
-    print(memo)
-
     intersection(detail, balance, start_, end_, memo)
     search_dataframe = extract_rows(leftTable, intersection_index)
 
@@ -246,16 +239,13 @@ def ok_button(request):
     modal_checklist_not_num = json_response.get('check_list')
 
     modal_checklist = list(map(int, modal_checklist_not_num))
-    print(modal_checklist)
 
     context = {}
 
     if modal_checklist:
         table_ = extract_rows(leftTable, list(map(int, modal_checklist)))
-        print(table_)
         moveRight(table_)
         deleteOverlap()
-        print(rightTable)
         push_deque(rightTable)
 
     right_data = rightTable
@@ -282,8 +272,6 @@ def download_button(request):
         '거래 내용': totalStatistics[2],
         '메모': totalStatistics[3]
     }
-
-    print(statistics_dict)
 
     statistics_dataframe = pd.DataFrame(statistics_dict, index=['통계'])
 
@@ -361,7 +349,7 @@ def upload_data(request):
 
         for index, row in df.iterrows():
             delete_duplicate_model = AccountData.objects.create(
-                user=request.user.username,
+                user=row['user'],
                 transaction_date=row['transaction_date'],
                 transaction_balance=row['transaction_balance'],
                 transaction_detail=row['transaction_detail'],
@@ -382,10 +370,63 @@ def upload_data(request):
 
 
 def show_data(request):
-    datalist = AccountData.objects.filter(user=request.user)
+    database_ = AccountData.objects.filter(user=request.user.username).values()
+
+    user_delete_dataframe = pd.DataFrame(list(database_)).drop(["user", "id"], axis=1)
+    dataframe_tolist = user_delete_dataframe.values.tolist()
+
+    total_statistics_ = total_statistics(dataframe_tolist)
+
     context = {
-        'datalist': datalist
+        'datalist': database_,
+        'total_statistics': total_statistics_
     }
+
+    if request.method == "POST":
+        date_checkbox = request.POST.get('search_date_feed')
+        balance_checkbox = request.POST.get('search_balance_feed')
+        detail_checkbox = request.POST.get('search_detail_feed')
+        memo_checkbox = request.POST.get('search_memo_feed')
+        start_date = request.POST.get('search_start_day')
+        end_date = request.POST.get('search_end_day')
+        balance = request.POST.get('search_detail_input')
+        detail = request.POST.get('search_balance_input')
+        memo = request.POST.get('search_memo_input')
+
+        search_requirement = list()
+
+        if date_checkbox:
+            search_requirement.append(start_date)
+            search_requirement.append(end_date)
+        else:
+            # 의미 없는 날짜로 변경 (모든 회계 정보가 출력 되도록)
+            search_requirement.append(date.today())
+            search_requirement.append(date.today() - timedelta(days=9999))
+
+        if balance_checkbox:
+            search_requirement.append(balance)
+        else:
+            search_requirement.append("")
+
+        if detail_checkbox:
+            search_requirement.append(detail)
+        else:
+            search_requirement.append("")
+
+        if memo_checkbox:
+            search_requirement.append(memo)
+        else:
+            search_requirement.append("")
+
+        search_result = AccountData.objects.filter(
+            user=request.user.username,
+            transaction_date__range=[search_requirement[0], search_requirement[1]],
+            transaction_balance__in=search_requirement[2],
+            transaction_detail__in=search_requirement[3],
+            transaction_memo__in=search_requirement[4]
+        )
+
+        context.update({'datalist': search_result})
 
     return render(request, 'HIAC/show_data.html', context)
 
@@ -409,7 +450,10 @@ def third_column_in_row(data):
     valid_list = list()
 
     for index in range(0, len(data)):
-        valid_list.append(data[index].replace(',', ''))
+        if type(data[index]) == str:
+            valid_list.append(data[index].replace(',', ''))
+        else:
+            valid_list.append(data[index])
 
     return valid_list
 

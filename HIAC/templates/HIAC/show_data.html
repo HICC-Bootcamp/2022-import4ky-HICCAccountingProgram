@@ -15,7 +15,9 @@
 
     <article>
         <div class="show_toolbar">
-
+            <a href="{% url 'HIAC:account_setting' %}" id="go_account_setting">
+                <span class="material-symbols-outlined" title="뒤로 가기" id="go_account_feed">undo</span>
+            </a>
         </div>
         <div class="search_mainWindow">
             <div class="search_leftTable">
@@ -52,30 +54,30 @@
                         <h3 id="search_data_requirement_title">검색 조건 설정</h3>
                         <div class="search_data_requirement_title_side"></div>
                     </div>
-                    <form method="post" id="search_data_form">
+                    <form method="post" id="search_data_form" action="{% url 'HIAC:show_data' %}">
                         {% csrf_token %}
                         <div class="search_data_find_date">
-                            <input type="checkbox" id="search_date_feed" onchange="showDateInputManage()"/>
+                            <input type="checkbox" id="search_date_feed" name="search_date_feed" value=0 onchange="showDateInputManage()"/>
                             <label for="date_feed" id="search_date_label">기간</label>
                             <label for="start_day" id="search_start_day_label">시작일</label>
-                            <input type="date" id="search_start_day" disabled>
+                            <input type="date" id="search_start_day" name="search_start_day" disabled>
                             <label for="end_day" id="search_end_day_label">종료일</label>
-                            <input type="date" id="search_end_day" disabled>
+                            <input type="date" id="search_end_day" name="search_end_day" disabled>
                         </div>
                         <div class="search_data_find_detail">
-                            <input type="checkbox" id="search_detail_feed" onchange="showDetailInputManage()"/>
+                            <input type="checkbox" id="search_detail_feed" name="search_detail_feed" value=0 onchange="showDetailInputManage()"/>
                             <label for="detail_feed" id="search_detail_label">내용</label>
-                            <input type="text" id="search_detail_input" placeholder="내용을 입력해 주세요" disabled>
+                            <input type="text" id="search_detail_input" name="search_detail_input" placeholder="내용을 입력해 주세요" disabled>
                         </div>
                         <div class="search_data_find_balance">
-                            <input type="checkbox" id="search_balance_feed" onchange="showBalanceInputManage()"/>
+                            <input type="checkbox" id="search_balance_feed" name="search_balance_feed" value=0 onchange="showBalanceInputManage()"/>
                             <label for="balance_feed" id="search_balance_label">금액</label>
-                            <input type="text" id="search_balance_input" placeholder="금액을 입력해 주세요" disabled>
+                            <input type="text" id="search_balance_input" name="search_balance_input" placeholder="금액을 입력해 주세요" disabled>
                         </div>
                         <div class="search_data_find_memo">
-                            <input type="checkbox" id="search_memo_feed" onchange="showMemoInputManage()"/>
+                            <input type="checkbox" id="search_memo_feed" name="search_memo_feed" value=0 onchange="showMemoInputManage()"/>
                             <label for="memo_feed" id="search_memo_label">메모</label>
-                            <input type="text" id="search_memo_input" placeholder="메모를 입력해 주세요" disabled>
+                            <input type="text" id="search_memo_input" name="search_memo_input" placeholder="메모를 입력해 주세요" disabled>
                         </div>
                     </form>
                     <div class="search_button_group">

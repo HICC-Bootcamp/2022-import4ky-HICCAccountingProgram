@@ -32,6 +32,17 @@
     background-color: #ccc;
 }
 
+#go_account_setting {
+    text-decoration: none;
+    color: black;
+}
+
+#go_account_feed {
+    font-size: 48px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
 .search_mainWindow {
     width: 1204px;
     height: 1000px;
