@@ -230,7 +230,8 @@ def search_data(request):
 
         search_list.append(search_dict)
 
-    return JsonResponse({'dlist': search_list}, json_dumps_params={'ensure_ascii': False}, content_type="application/json")
+    return JsonResponse({'dlist': search_list}, json_dumps_params={'ensure_ascii': False},
+                        content_type="application/json")
 
 
 def ok_button(request):
