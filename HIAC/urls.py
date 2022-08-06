@@ -35,6 +35,7 @@ urlpatterns = [
     path('donwload/', views.download, name='download'),
     path('upload_data/', views.upload_data, name='upload_data'),
     path('show_data/', views.show_data, name='show_data'),
+    path('database_download/', views.database_download, name='database_download'),
 ]
 
 if settings.DEBUG:

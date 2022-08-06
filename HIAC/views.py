@@ -33,6 +33,7 @@ dataset_queue.appendleft(rightTable)
 queue_index = 0
 
 intersection_index = list()
+current_username = ''
 
 
 def signup(request):
@@ -205,7 +206,7 @@ def search_data(request):
     start_ = first_column_in_row(start)
     end_ = first_column_in_row(end)
 
-    intersection(detail, balance, start_, end_, memo)
+    intersection(detail, balance, start_, end_, memo, False)
     search_dataframe = extract_rows(leftTable, intersection_index)
 
     solve_nan_search_dataframe = search_dataframe.fillna('n/a')
@@ -268,10 +269,10 @@ def download_button(request):
     global totalStatistics, rightTable
 
     statistics_dict = {
-        '거래 일시': totalStatistics[0],
-        '거래 금액': totalStatistics[1],
-        '거래 내용': totalStatistics[2],
-        '메모': totalStatistics[3]
+        '총 인원': totalStatistics[0],
+        '총 입금': totalStatistics[1],
+        '총 지출': totalStatistics[2],
+        '입금-지출 차액': totalStatistics[3]
     }
 
     statistics_dataframe = pd.DataFrame(statistics_dict, index=['통계'])
@@ -350,6 +351,7 @@ def upload_data(request):
 
         for index, row in df.iterrows():
             delete_duplicate_model = AccountData.objects.create(
+                id=index,
                 user=row['user'],
                 transaction_date=row['transaction_date'],
                 transaction_balance=row['transaction_balance'],
@@ -371,7 +373,9 @@ def upload_data(request):
 
 
 def show_data(request):
+    global current_username
     database_ = AccountData.objects.filter(user=request.user.username).values()
+    current_username = request.user.username
 
     user_delete_dataframe = pd.DataFrame(list(database_)).drop(["user", "id"], axis=1)
     dataframe_tolist = user_delete_dataframe.values.tolist()
@@ -390,22 +394,22 @@ def show_data(request):
         memo_checkbox = request.POST.get('search_memo_feed')
         start_date = request.POST.get('search_start_day')
         end_date = request.POST.get('search_end_day')
-        balance = request.POST.get('search_detail_input')
-        detail = request.POST.get('search_balance_input')
+        balance = request.POST.get('search_balance_input')
+        detail = request.POST.get('search_detail_input')
         memo = request.POST.get('search_memo_input')
 
         search_requirement = list()
 
         if date_checkbox:
-            search_requirement.append(start_date)
-            search_requirement.append(end_date)
+            search_requirement.append(first_column_in_row(start_date))
+            search_requirement.append(first_column_in_row(end_date))
         else:
-            # 의미 없는 날짜로 변경 (모든 회계 정보가 출력 되도록)
-            search_requirement.append(date.today())
-            search_requirement.append(date.today() - timedelta(days=9999))
+            search_requirement.append("")
+            search_requirement.append("")
 
         if balance_checkbox:
-            search_requirement.append(balance)
+            balance_ = third_column_in_row(balance)
+            search_requirement.append(balance_[0])
         else:
             search_requirement.append("")
 
@@ -419,17 +423,90 @@ def show_data(request):
         else:
             search_requirement.append("")
 
-        search_result = AccountData.objects.filter(
-            user=request.user.username,
-            transaction_date__range=[search_requirement[0], search_requirement[1]],
-            transaction_balance__in=search_requirement[2],
-            transaction_detail__in=search_requirement[3],
-            transaction_memo__in=search_requirement[4]
-        )
+        print(search_requirement)
+        print(type(search_requirement[0]))
 
-        context.update({'datalist': search_result})
+        search_ = AccountData.objects.filter(user=request.user.username).values()
+        search_to_dataframe = pd.DataFrame(list(search_)).drop(["user", "id"], axis=1)
+
+        database_tolist = search_to_dataframe.values.tolist()
+
+        for i in range(0, len(database_tolist)):
+            database_tolist[i][0] = datetime_to_str(database_tolist[i][0])
+            database_tolist[i][1] = money_to_str(database_tolist[i][1])
+
+        database_time_str = list(zip(*database_tolist))[0]
+        database_balance_str = list(zip(*database_tolist))[1]
+
+        search_to_dataframe['transaction_date'] = database_time_str
+        search_to_dataframe['transaction_balance'] = database_balance_str
+
+        search_to_dataframe.columns = ['거래일시', '거래금액', '내용', '메모']
+
+        intersection(search_requirement[3], search_requirement[2],
+                     search_requirement[0], search_requirement[1],
+                     search_requirement[4], True, search_to_dataframe)
+
+        search_result = extract_rows(search_to_dataframe, intersection_index)
+
+        search_result_tolist = search_result.values.tolist()
+
+        search_list = []
+
+        for i in range(0, len(search_result_tolist)):
+            search_dict = {
+                'transaction_date': search_result_tolist[i][0],
+                'transaction_balance': search_result_tolist[i][1],
+                'transaction_detail': search_result_tolist[i][2],
+                'transaction_memo': search_result_tolist[i][3]
+            }
+
+            # 비어 있는 값이면 공백 으로 처리
+            if search_result_tolist[i][3] == 'n/a':
+                search_dict.update({'transaction_memo': " "})
+
+            search_list.append(search_dict)
+
+        print(search_result_tolist)
+        total_statistics_ = total_statistics(search_result_tolist)
+
+        context.update({'datalist': search_list})
+        context.update({'total_statistics': total_statistics_})
 
     return render(request, 'HIAC/show_data.html', context)
+
+
+def database_download(request):
+    print(current_username)
+    database_ = AccountData.objects.filter(user=current_username).values()
+    database_to_dataframe = pd.DataFrame(list(database_)).drop(["user", "id"], axis=1)
+    database_tolist = database_to_dataframe.values.tolist()
+
+    for i in range(0, len(database_tolist)):
+        database_tolist[i][0] = datetime_to_str(database_tolist[i][0])
+
+    database_time_str = list(zip(*database_tolist))[0]
+
+    database_to_dataframe['transaction_date'] = database_time_str
+
+    total_statistics_ = total_statistics(database_tolist)
+
+    statistics_dict = {
+        '총 인원': total_statistics_[0],
+        '총 입금': total_statistics_[1],
+        '총 지출': total_statistics_[2],
+        '입금-지출 차액': total_statistics_[3]
+    }
+
+    statistics_dataframe = pd.DataFrame(statistics_dict, index=['통계'])
+
+    xlsx_dir = pathlib.Path(r'./HIAC/xlsx/xlsx4/output.xlsx')
+
+    with pd.ExcelWriter(xlsx_dir) as writer:
+        database_to_dataframe.to_excel(writer, sheet_name="추출 결과", index=False)
+        statistics_dataframe.to_excel(writer, sheet_name="통계", index=False)
+
+    return JsonResponse({"success_": "success"})
 
 
 # 통계를 출력 하는 함수
@@ -468,6 +545,15 @@ def first_column_in_row(data):
 def date_format_conversion(date_str):
     date_formatter = "%Y.%m.%d %H:%M:%S"
     return datetime.strptime(date_str, date_formatter)
+
+
+def datetime_to_str(date_):
+    date_formatter = "%Y.%m.%d %H:%M:%S"
+    return date_.strftime(date_formatter)
+
+
+def money_to_str(balance):
+    return str(balance)
 
 
 # 총 입금액 계산
@@ -602,8 +688,8 @@ def redo_data():
         return False
 
 
-def date_select(date_start, date_end, total_index):
-    date_list = extract_cols(leftTable, '거래일시')
+def date_select(table_, date_start, date_end, total_index):
+    date_list = extract_cols(table_, '거래일시')
     adjust_date_end = date_end + ' 23:59:59'
 
     index_date = list()
@@ -632,8 +718,8 @@ def date_select(date_start, date_end, total_index):
     return index_date
 
 
-def money_select(money, total_index):
-    money_list = extract_cols(leftTable, '거래금액')
+def money_select(table_, money, total_index):
+    money_list = extract_cols(table_, '거래금액')
     new_money_list = third_column_in_row(money_list)
     if money == '':
         index_money = total_index
@@ -646,8 +732,8 @@ def money_select(money, total_index):
     return index_money
 
 
-def name_select(name, total_index):
-    namelist = extract_cols(leftTable, '내용')
+def name_select(table_, name, total_index):
+    namelist = extract_cols(table_, '내용')
 
     if name == '':
         index_name = total_index
@@ -657,8 +743,8 @@ def name_select(name, total_index):
     return index_name
 
 
-def memo_select(memo, total_index):
-    memo_list = extract_cols(leftTable, '메모')
+def memo_select(table_, memo, total_index):
+    memo_list = extract_cols(table_, '메모')
     if memo == '':
         index_memo = total_index
     else:
@@ -667,16 +753,28 @@ def memo_select(memo, total_index):
     return index_memo
 
 
-def intersection(name, money, date_start, date_end, memo):
-    global intersection_index
-    total_index_list = index_maker(len(leftTable))
-    date_index = date_select(date_start, date_end, total_index_list)
-    name_index = name_select(name, total_index_list)
-    money_index = money_select(money, total_index_list)
-    memo_index = memo_select(memo, total_index_list)
-    intersection_index = list(set(name_index) & set(money_index) & set(date_index) & set(memo_index))
-    intersection_index.sort()
-    print(intersection_index)
+def intersection(name, money, date_start, date_end, memo, is_db, db=None):
+    global intersection_index, leftTable
+    if not is_db:
+        total_index_list = index_maker(len(leftTable))
+        date_index = date_select(leftTable, date_start, date_end, total_index_list)
+        name_index = name_select(leftTable, name, total_index_list)
+        money_index = money_select(leftTable, money, total_index_list)
+        memo_index = memo_select(leftTable, memo, total_index_list)
+        intersection_index = list(set(name_index) & set(money_index) & set(date_index) & set(memo_index))
+        intersection_index.sort()
+        print(intersection_index)
+    else:
+        total_index_list = index_maker(len(db))
+        date_index = date_select(db, date_start, date_end, total_index_list)
+        name_index = name_select(db, name, total_index_list)
+        money_index = money_select(db, money, total_index_list)
+        memo_index = memo_select(db, memo, total_index_list)
+        intersection_index = list(set(name_index) & set(money_index) & set(date_index) & set(memo_index))
+        intersection_index.sort()
+        print(intersection_index)
+
+
 
 
 def index_maker(total_index):

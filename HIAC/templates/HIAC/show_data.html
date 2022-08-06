@@ -2,10 +2,10 @@
 
 {% block body %}
 {% if user.is_authenticated %}
+{% load static %}
     <header>
         <div class="show_data_header_window">
-            <a href="{% url 'HIAC:intro' %}"> <img src="https://cdn.pixabay.com/photo/2013/07/12/12/36/letter-146002_1280.png"
-                                          alt="HIAC" id="show_logo"></a>
+            <a href="{% url 'HIAC:intro' %}"> <img src= "{% static 'img/logo.png'%}" alt="HIAC" id="show_logo"></a>
             <h2 id="show_data_header">{{ user.username }}님의 데이터 보기</h2>
             <button type="submit" class="btn btn-secondary" id="show_logout_btn">
                 <a href="{% url 'HIAC:logout' %}" id="show_data_logout_btn_a_tag">logout</a>
@@ -18,6 +18,9 @@
             <a href="{% url 'HIAC:account_setting' %}" id="go_account_setting">
                 <span class="material-symbols-outlined" title="뒤로 가기" id="go_account_feed">undo</span>
             </a>
+            <button type="button" onclick="database_download_button_clicked()" name="db_download_data" id="db_download_btn_feed">
+                    <span class="material-symbols-outlined" title="다운로드 하기" id="db_download_excel">file_download</span>
+            </button>
         </div>
         <div class="search_mainWindow">
             <div class="search_leftTable">
@@ -129,6 +132,25 @@
             padding: 0;
         }
     </style>
+
+    <script>
+        let url_database_download_button = {% url 'HIAC:database_download' %};
+
+         function database_download_button_clicked() {
+             $.ajax({
+                 url: url_database_download_button,
+                 type: "POST",
+                 headers: {
+                     'X-CSRFTOKEN': '{{ csrf_token }}'
+                 },
+                 data: null,
+                 complete: function(response) {
+                     let success = JSON.parse(response.responseText);
+                     console.log(success.success_);
+                 }
+             });
+        }
+    </script>
 
 {% else %}
     <div class="login_error">
