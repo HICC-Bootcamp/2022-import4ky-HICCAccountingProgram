@@ -1,0 +1,86 @@
+.db_download_modal_overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(1.5px);
+    -webkit-backdrop-filter: blur(1.5px);
+}
+
+.db_download_modal_window {
+    background: white;
+    backdrop-filter: blur(13.5px);
+    -webkit-backdrop-filter: blur(13.5px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    width: 700px;
+    height: 600px;
+    position: relative;
+    padding: 10px;
+}
+
+.db_download_modal_title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#db_close_download_modal {
+    cursor: pointer;
+}
+
+.db_download_modal_title_side {
+    flex: 0 0 40px;
+    text-align: center;
+}
+
+.db_download_window {
+    width: 680px;
+    height: 400px;
+    margin-top: 50px;
+}
+
+.db_file_name_input_window {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 200px;
+}
+
+#db_file_name_input_label {
+    text-align: center;
+    width: 70px;
+    font-size: 15px;
+}
+
+#db_file_name_input {
+    width: 400px;
+    height: 30px;
+}
+
+.db_download_button_window {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 200px;
+}
+
+.db_download_button_window_side {
+    flex: 0 0 40px;
+    text-align: center;
+}
+
+#db_download_button_feed {
+    width: 60px;
+    height: 30px;
+}
