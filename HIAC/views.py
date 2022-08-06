@@ -228,10 +228,10 @@ def download_button(request):
     global totalStatistics, rightTable
 
     statistics_dict = {
-        '거래 일시': totalStatistics[0],
-        '거래 금액': totalStatistics[1],
-        '거래 내용': totalStatistics[2],
-        '메모': totalStatistics[3]
+        '총 인원': totalStatistics[0],
+        '총 입금': totalStatistics[1],
+        '총 지출': totalStatistics[2],
+        '입금-지출 차액': totalStatistics[3]
     }
 
     print(statistics_dict)
