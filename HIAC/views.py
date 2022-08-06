@@ -474,8 +474,8 @@ def money_select(money, total_index):
         index_money = total_index
     else:
         new_money = money.replace(',', '')
-        new_money = money.replace('.', '')
-        new_money = money.replace(' ', '')
+        new_money = new_money.replace('.', '')
+        new_money = new_money.replace(' ', '')
         index_money = [i for i in range(len(new_money_list)) if new_money in new_money_list[i]]
     print(index_money)
     return index_money
