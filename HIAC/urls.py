@@ -37,6 +37,7 @@ urlpatterns = [
     path('show_data/', views.show_data, name='show_data'),
     path('database_download/', views.database_download, name='database_download'),
     path('db_download/', views.db_download, name='db_download'),
+    path('db_reset/', views.db_reset, name='db_reset'),
 ]
 
 if settings.DEBUG:

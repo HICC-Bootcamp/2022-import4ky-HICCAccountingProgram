@@ -21,6 +21,9 @@
             <button type="button" onclick="database_download_button_clicked()" name="db_download_data" id="db_download_btn_feed">
                     <span class="material-symbols-outlined" title="다운로드 하기" id="db_download_excel">file_download</span>
             </button>
+            <button type="submit" name="db_reset" form="db_reset_form" id="db_reset_feed">
+                    <span class="material-symbols-outlined" title="데이터베이스 초기화" id="db_reset">delete_forever</span>
+            </button>
         </div>
         <div class="search_mainWindow">
             <div class="search_leftTable">
@@ -112,6 +115,11 @@
             </div>
         </div>
     </article>
+    <footer>
+        <form method="post" action="{% url 'HIAC:db_reset' %}" id="db_reset_form">
+            {% csrf_token %}
+        </form>
+    </footer>
 
      <!-- download modal window !-->
     <div id="db_download_modal_feed" class="db_download_modal_overlay">

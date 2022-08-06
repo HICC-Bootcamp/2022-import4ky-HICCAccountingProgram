@@ -377,15 +377,21 @@ def show_data(request):
     database_ = AccountData.objects.filter(user=request.user.username).values()
     current_username = request.user.username
 
-    user_delete_dataframe = pd.DataFrame(list(database_)).drop(["user", "id"], axis=1)
-    dataframe_tolist = user_delete_dataframe.values.tolist()
+    try:
+        user_delete_dataframe = pd.DataFrame(list(database_)).drop(["user", "id"], axis=1)
+        dataframe_tolist = user_delete_dataframe.values.tolist()
+        total_statistics_ = total_statistics(dataframe_tolist)
 
-    total_statistics_ = total_statistics(dataframe_tolist)
+        context = {
+            'datalist': database_,
+            'total_statistics': total_statistics_
+        }
 
-    context = {
-        'datalist': database_,
-        'total_statistics': total_statistics_
-    }
+    except KeyError:
+        context = {
+            'datalist': database_,
+            'total_statistics': [0, 0, 0, 0]
+        }
 
     # 검색 버튼을 눌렀을 때
     if request.method == "POST":
@@ -536,6 +542,11 @@ def db_download(request):
         response = FileResponse(fs.open(file_name_change, 'rb'), content_type='application/vnd.ms-excel')
 
         return response
+
+
+def db_reset(request):
+    AccountData.objects.filter(user=current_username).delete()
+    return redirect('HIAC:show_data')
 
 
 # 통계를 출력 하는 함수

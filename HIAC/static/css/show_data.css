@@ -43,6 +43,19 @@
     cursor: pointer;
 }
 
+.show_toolbar #db_reset_feed {
+    padding: 0;
+    border: none;
+    float: right;
+    background-color:transparent;
+}
+
+.show_toolbar #db_reset {
+    font-size: 48px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
 .show_toolbar #db_download_btn_feed {
     padding: 0;
     border: none;
