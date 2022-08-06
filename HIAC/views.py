@@ -387,6 +387,7 @@ def show_data(request):
         'total_statistics': total_statistics_
     }
 
+    # 검색 버튼을 눌렀을 때
     if request.method == "POST":
         date_checkbox = request.POST.get('search_date_feed')
         balance_checkbox = request.POST.get('search_balance_feed')
@@ -507,6 +508,34 @@ def database_download(request):
         statistics_dataframe.to_excel(writer, sheet_name="통계", index=False)
 
     return JsonResponse({"success_": "success"})
+
+
+# db 창 안에 있는 download modal window 안의 저장 버튼을 눌렀을 때 파일 저장
+def db_download(request):
+    file_name = request.POST.get('db_file_name')
+
+    src = pathlib.Path(r'./HIAC/xlsx/xlsx4/output.xlsx')
+    xlsx_dir = pathlib.Path(r'./HIAC/xlsx/xlsx4')
+
+    if file_name != "":
+        file_name_change = file_name + '.xlsx'
+        dst = os.path.join(xlsx_dir, file_name_change)
+        os.rename(src, dst)
+
+        fs = FileSystemStorage(xlsx_dir)
+        response = FileResponse(fs.open(file_name_change, 'rb'), content_type='application/vnd.ms-excel')
+
+        return response
+
+    else:
+        file_name_change = 'HIAC.xlsx'
+        dst = os.path.join(xlsx_dir, file_name_change)
+        os.rename(src, dst)
+
+        fs = FileSystemStorage(xlsx_dir)
+        response = FileResponse(fs.open(file_name_change, 'rb'), content_type='application/vnd.ms-excel')
+
+        return response
 
 
 # 통계를 출력 하는 함수

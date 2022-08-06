@@ -125,7 +125,7 @@
             </div>
             <div class="db_download_window">
                 <div class="db_file_name_input_window">
-                    <form method="post" action="{% url 'HIAC:download' %}" id="db_download_form">
+                    <form method="post" action="{% url 'HIAC:db_download' %}" id="db_download_form">
                       {% csrf_token %}
                       <label for="db_file_name_input" id="db_file_name_input_label">문서명 입력</label>
                       <input type="text" name="db_file_name" id="db_file_name_input" placeholder="문서명을 입력해주세요">
