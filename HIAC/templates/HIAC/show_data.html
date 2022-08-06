@@ -7,9 +7,7 @@
         <div class="show_data_header_window">
             <a href="{% url 'HIAC:intro' %}"> <img src= "{% static 'img/logo.png'%}" alt="HIAC" id="show_logo"></a>
             <h2 id="show_data_header">{{ user.username }}님의 데이터 보기</h2>
-            <button type="submit" class="btn btn-secondary" id="show_logout_btn">
-                <a href="{% url 'HIAC:logout' %}" id="show_data_logout_btn_a_tag">logout</a>
-            </button>
+            <a href="{% url 'HIAC:logout' %}" id="show_data_logout_btn_a_tag">logout</a>
         </div>
     </header>
 

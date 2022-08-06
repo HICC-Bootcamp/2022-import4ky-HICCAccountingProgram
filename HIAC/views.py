@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 from collections import deque
-from datetime import datetime, date, timedelta
+from datetime import datetime
 from .models import AccountData
 
 import msoffcrypto
@@ -91,7 +91,7 @@ def intro(request):
         pw = request.POST.get('password_excel')
         try:
             unlock_main(pw)
-            readExel()
+            read_exel()
             context['leftTable'] = True
             context.update({'password_error': False})
 
@@ -126,8 +126,8 @@ def account_setting(request):
 
         # checklist 받아온 것을 정수로 변환 하여 1씩 뺀 list => 선택된 데이터 의 행을 가져 와서 rightTable 에 넘긴다.
         if left_checklist:
-            moveRight(extract_rows(left_data, list(map(lambda x: x-1, list(map(int, left_checklist))))))
-            deleteOverlap()
+            move_right(extract_rows(left_data, list(map(lambda x: x - 1, list(map(int, left_checklist))))))
+            delete_overlap()
             push_deque(rightTable)
 
         right_data = rightTable
@@ -147,7 +147,7 @@ def account_setting(request):
         right_checklist = request.POST.getlist('right_checkbox[]')
 
         if right_checklist:
-            deleteRow(list(map(lambda x: x - 1, list(map(int, right_checklist)))))
+            delete_row(list(map(lambda x: x - 1, list(map(int, right_checklist)))))
             push_deque(rightTable)
 
         new_right_data = rightTable
@@ -246,8 +246,8 @@ def ok_button(request):
 
     if modal_checklist:
         table_ = extract_rows(leftTable, list(map(int, modal_checklist)))
-        moveRight(table_)
-        deleteOverlap()
+        move_right(table_)
+        delete_overlap()
         push_deque(rightTable)
 
     right_data = rightTable
@@ -325,8 +325,8 @@ def upload_data(request):
         format_date_list = list()
 
         # 날짜 포맷
-        for date in date_list:
-            format_date_list.append(date_format_conversion(date))
+        for date_ in date_list:
+            format_date_list.append(date_format_conversion(date_))
 
         # 금액 포맷
         format_balance_list = third_column_in_row(balance_list)
@@ -415,8 +415,10 @@ def show_data(request):
             search_requirement.append("")
 
         if balance_checkbox:
-            balance_ = third_column_in_row(balance)
-            search_requirement.append(balance_[0])
+            balance_ = balance.replace(',', '')
+            balance_ = balance_.replace('.', '')
+            balance_ = balance_.replace(' ', '')
+            search_requirement.append(balance_)
         else:
             search_requirement.append("")
 
@@ -430,61 +432,70 @@ def show_data(request):
         else:
             search_requirement.append("")
 
-        print(search_requirement)
-        print(type(search_requirement[0]))
-
         search_ = AccountData.objects.filter(user=request.user.username).values()
-        search_to_dataframe = pd.DataFrame(list(search_)).drop(["user", "id"], axis=1)
 
-        database_tolist = search_to_dataframe.values.tolist()
+        try:
+            search_to_dataframe = pd.DataFrame(list(search_)).drop(["user", "id"], axis=1)
 
-        for i in range(0, len(database_tolist)):
-            database_tolist[i][0] = datetime_to_str(database_tolist[i][0])
-            database_tolist[i][1] = money_to_str(database_tolist[i][1])
+            database_tolist = search_to_dataframe.values.tolist()
 
-        database_time_str = list(zip(*database_tolist))[0]
-        database_balance_str = list(zip(*database_tolist))[1]
+            for i in range(0, len(database_tolist)):
+                database_tolist[i][0] = datetime_to_str(database_tolist[i][0])
+                database_tolist[i][1] = money_to_str(database_tolist[i][1])
 
-        search_to_dataframe['transaction_date'] = database_time_str
-        search_to_dataframe['transaction_balance'] = database_balance_str
+            database_time_str = list(zip(*database_tolist))[0]
+            database_balance_str = list(zip(*database_tolist))[1]
 
-        search_to_dataframe.columns = ['거래일시', '거래금액', '내용', '메모']
+            search_to_dataframe['transaction_date'] = database_time_str
+            search_to_dataframe['transaction_balance'] = database_balance_str
 
-        intersection(search_requirement[3], search_requirement[2],
-                     search_requirement[0], search_requirement[1],
-                     search_requirement[4], True, search_to_dataframe)
+            search_to_dataframe.columns = ['거래일시', '거래금액', '내용', '메모']
 
-        search_result = extract_rows(search_to_dataframe, intersection_index)
+            # detail, balance, start_, end_, memo
+            intersection(search_requirement[3], search_requirement[2],
+                         search_requirement[0], search_requirement[1],
+                         search_requirement[4], True, search_to_dataframe)
 
-        search_result_tolist = search_result.values.tolist()
+            search_result = extract_rows(search_to_dataframe, intersection_index)
 
-        search_list = []
+            search_result_tolist = search_result.values.tolist()
 
-        for i in range(0, len(search_result_tolist)):
-            search_dict = {
-                'transaction_date': search_result_tolist[i][0],
-                'transaction_balance': search_result_tolist[i][1],
-                'transaction_detail': search_result_tolist[i][2],
-                'transaction_memo': search_result_tolist[i][3]
-            }
+            search_list = []
 
-            # 비어 있는 값이면 공백 으로 처리
-            if search_result_tolist[i][3] == 'n/a':
-                search_dict.update({'transaction_memo': " "})
+            for i in range(0, len(search_result_tolist)):
+                search_dict = {
+                    'transaction_date': search_result_tolist[i][0],
+                    'transaction_balance': search_result_tolist[i][1],
+                    'transaction_detail': search_result_tolist[i][2],
+                    'transaction_memo': search_result_tolist[i][3]
+                }
 
-            search_list.append(search_dict)
+                # 비어 있는 값이면 공백 으로 처리
+                if search_result_tolist[i][3] == 'n/a':
+                    search_dict.update({'transaction_memo': " "})
 
-        print(search_result_tolist)
-        total_statistics_ = total_statistics(search_result_tolist)
+                search_list.append(search_dict)
 
-        context.update({'datalist': search_list})
-        context.update({'total_statistics': total_statistics_})
+            total_statistics_ = total_statistics(search_result_tolist)
+
+            context.update({'datalist': search_list})
+            context.update({'total_statistics': total_statistics_})
+
+        except KeyError:
+            context.update({'datalist': search_})
+            context.update({'total_statistics': [0, 0, 0, 0]})
+
+        except IndexError:
+            non = pd.DataFrame({'transaction_date': [], 'transaction_balance': [],
+                                'transaction_detail': [], 'transaction_memo': []})
+
+            context.update({'datalist': non})
+            context.update({'total_statistics': [0, 0, 0, 0]})
 
     return render(request, 'HIAC/show_data.html', context)
 
 
 def database_download(request):
-    print(current_username)
     database_ = AccountData.objects.filter(user=current_username).values()
     database_to_dataframe = pd.DataFrame(list(database_)).drop(["user", "id"], axis=1)
     database_tolist = database_to_dataframe.values.tolist()
@@ -655,28 +666,25 @@ def extract_cols(table_, col_list):
 
 
 # 회계 정보 페이지
-def readExel():
+def read_exel():
     global leftTable
     leftTable = read_table()
 
 
-def moveRight(data):
+def move_right(data):
     global rightTable
     rightTable = rightTable.append(data, ignore_index=True)
-    print(rightTable)
     sort_and_reindex()
-    print(rightTable)
 
 
-def deleteOverlap():
+def delete_overlap():
     global rightTable
     rightTable = rightTable.drop_duplicates()
     sort_and_reindex()
-    print(rightTable)
 
 
 # 행 삭제 함수
-def deleteRow(row_index):
+def delete_row(row_index):
     global rightTable
     rightTable = rightTable.drop(row_index, axis=0)
     sort_and_reindex()
@@ -765,8 +773,8 @@ def money_select(table_, money, total_index):
         index_money = total_index
     else:
         new_money = money.replace(',', '')
-        new_money = money.replace('.', '')
-        new_money = money.replace(' ', '')
+        new_money = new_money.replace('.', '')
+        new_money = new_money.replace(' ', '')
         index_money = [i for i in range(len(new_money_list)) if new_money in new_money_list[i]]
     print(index_money)
     return index_money
@@ -815,8 +823,6 @@ def intersection(name, money, date_start, date_end, memo, is_db, db=None):
         print(intersection_index)
 
 
-
-
 def index_maker(total_index):
     index = []
     for i in range(0, total_index):
@@ -824,19 +830,5 @@ def index_maker(total_index):
     return index
 
 
-# unlock_main('981227')
-
-# 회계 정보 페이지 test
-# row_list = [1, 2, 3, 4]
-# col_list = ['거래일시']
 table = read_table()
-# print(extract_rows(table, row_list))
-# print(extract_cols(table, col_list))
-# print(extract_cols(table, '내용'))
-# len(extract_cols(table, '내용'))
-readExel()
-# data={'거래일시':'2022.06.30 23:33:34','거래금액':'-370,500','내용':'어른이대공원(본점)','메모' : np.nan}
-# rightTable = leftTable
-# moveRight(data)
-# deleteOverlap()
-# print(leftTable)
+read_exel()
