@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
 {% block body %}
+{% load static %}
 
     <header>
-        <a href="{% url 'intro' %}"> <img src="https://cdn.pixabay.com/photo/2013/07/12/12/36/letter-146002_1280.png"
-                                          alt="HIAC" id="logo"></a>
+        <a href="{% url 'intro' %}"> <img src="{% static 'img/logo.png' %}" alt="HIAC" id="logo"></a>
     </header>
 
     <article>
