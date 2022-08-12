@@ -830,5 +830,8 @@ def index_maker(total_index):
     return index
 
 
-table = read_table()
-read_exel()
+try:
+    table = read_table()
+    read_exel()
+except IndexError:
+    pass
